@@ -15,7 +15,6 @@
       </div>
       <pubSelect label="抄送人" class='content-item' v-model='formData.copier' v-bind:data="formData.copier"></pubSelect>
     </div>
-    <button @click='show'>12312321321</button>
   </div>
 </template>
 <script>
@@ -44,7 +43,6 @@ export default {
   },
   data() {
     return {
-      userInfo: null,
       formData: null,
       visible: false,
       layout: "normal",
@@ -99,24 +97,15 @@ export default {
     }
   },
   methods: {
-    show() {
-      console.log("formData", this.formData);
-    },
     getData() {
-      this.getUser()
-        .then(e => {
-          this.userInfo = e;
-        })
-        .then(() => {
-          return this.$post({
-            url: "/company/approval/intoStart",
-            postData: {
-              access_token: this.userInfo.access_token,
-              companyId: this.userInfo.company_id,
-              processmark: this.params
-            }
-          });
-        })
+      this.$post({
+        url: "/company/approval/intoStart",
+        postData: {
+          access_token: this.$store.state.userInfo.access_token,
+          companyId: this.$store.state.userInfo.company_id,
+          processmark: this.params
+        }
+      })
         .then(data => {
           data.nodeForm.forEach(item => {
             item.view = JSON.parse(item.view);
@@ -133,7 +122,7 @@ export default {
       let params = {
         nodemark: this.formData.nodemark,
         processmark: this.formData.processmark,
-        userId: this.userInfo.userId.toString(),
+        userId: this.$store.state.userInfo.userId.toString(),
         copier: this.formData.copier,
         nodeForm: [],
         attachment: []
@@ -155,8 +144,8 @@ export default {
         }
       }
       let postParams = {
-        access_token: this.userInfo.access_token,
-        companyId: this.userInfo.company_id,
+        access_token: this.$store.state.userInfo.access_token,
+        companyId: this.$store.state.userInfo.company_id,
         start: JSON.stringify(params)
       };
       console.log("发起审批参数", JSON.stringify(postParams));

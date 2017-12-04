@@ -3,15 +3,14 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import store from './store'
 import './assets/font/font.css'
 import Mint from 'mint-ui';
 import 'mint-ui/lib/style.css';
 import moment from "moment";
 import VueResource from "vue-resource";
 import './assets/js/toNative';
-import Bus from "./assets/js/Bus";
 import pubFunc from './assets/js/pubFunc';
-
 import VueTouchKeyboard from "vue-touch-keyboard";
 import style from "vue-touch-keyboard/dist/vue-touch-keyboard.css";
 Vue.use(VueTouchKeyboard);
@@ -33,10 +32,8 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router,
+  store,
   template: '<App/>',
-  data: {
-    Bus
-  },
   components: { App }
 })
 

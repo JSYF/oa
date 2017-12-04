@@ -7,8 +7,8 @@ import ApproveLunchList from '@/components/approve/LunchList'
 import ApproveLunching from "@/components/approve/Lunching"
 import ApproveDetails from "@/components/approve/Details";
 Vue.use(Router)
-
-export default new Router({
+import store from "../store";
+const router = new Router({
   routes: [
     {
       path: '/approve',
@@ -16,7 +16,7 @@ export default new Router({
       component: Approve
     },
     {
-      path: "/approve/details/:params",
+      path: "/approve/details/:approvalId",
       component: ApproveDetails,
       props: true,
       name: "approveDetails"
@@ -45,3 +45,8 @@ export default new Router({
     }
   ]
 })
+router.beforeResolve((to, from, next) => {
+  store.dispatch("updateUser");
+  next();
+})
+export default router;

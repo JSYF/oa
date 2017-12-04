@@ -45,8 +45,6 @@ export default {
         startNum: 0,
         status: 0
       },
-
-      userInfo: null, //存储用户信息
       listData: [],
       slideIndex: 0, //0 未审批 1 已审批
       slideData: [
@@ -68,13 +66,9 @@ export default {
     };
   },
   mounted() {
-    this.getUser()
-      .then(e => {
-        this.userInfo = e;
-        this.getList();
-      })
-      .catch(e => console.log(e));
+    this.getList();
   },
+  computed: {},
   methods: {
     slideFunc(data) {
       this.slideIndex = data;
@@ -96,11 +90,11 @@ export default {
     },
     getList(moreStr) {
       let param = {
-        access_token: this.userInfo.access_token,
-        userId: this.userInfo.userId,
+        access_token: this.$store.state.userInfo.access_token,
+        userId: this.$store.state.userInfo.userId,
         num: this.getListParam.num,
         type: this.getListParam.type,
-        companyId: this.userInfo.company_id
+        companyId: this.$store.state.userInfo.company_id
       };
       if (this.slideIndex == 0) {
         param.status = this.approvingData.status;
@@ -109,12 +103,12 @@ export default {
         param.status = this.approvedData.status;
         param.startNum = this.approvedData.startNum;
       }
-      console.log("查询审批参数：", param);
+      // console.log("查询审批参数：", param);
       this.$http
         .post(baseURL + "/oa-work/approval/selectApprovalList", param)
         .then(
           result => {
-            console.log("审批列表成功:", result);
+            // console.log("审批列表成功:", result);
             if (result.ok && result.data.status == true) {
               let list =
                 this.slideIndex == 0
@@ -168,16 +162,15 @@ export default {
     toDetails(item) {
       console.log(item);
       const params = {
-        approvalId: item.id,
         name: item.name,
         status: this.slideIndex,
         type: this.getListParam.type,
         nodemark: item.nodemark
       };
+      window.localStorage.setItem("approveDetails", JSON.stringify(params));
       this.$router.push({
         name: "approveDetails",
-        params: JSON.stringify(params),
-        props: true
+        params: { approvalId: item.id }
       });
     },
     //下拉刷新

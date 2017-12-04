@@ -31,7 +31,7 @@ export default {
       },
       headerData: {
         title: "审批",
-        backUrl:"/"
+        backUrl: "/"
       }
     };
   }

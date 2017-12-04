@@ -24,7 +24,6 @@ export default {
   components: { pubHeader },
   data() {
     return {
-      userInfo: null,
       lunchList: null,
       headerData: {
         title: "发起审批",
@@ -33,26 +32,23 @@ export default {
     };
   },
   mounted() {
-    this.getUser().then(e => {
-      this.userInfo = e;
-      this.getLunchList();
-    });
+    this.getLunchList();
   },
   methods: {
     //跳转到发起审批页面
     toLunching: function(item) {
       const params = item.processmark;
-      // this.$router.push({
-      //   name: "approveLunching",
-      //   params: { params }
-      // });
+      this.$router.push({
+        name: "approveLunching",
+        params: { params }
+      });
     },
     getLunchList() {
       this.$post({
         url: "/company/process/showProcess",
         postData: {
-          companyId: this.userInfo.company_id,
-          access_token: this.userInfo.access_token
+          companyId: this.$store.state.userInfo.company_id,
+          access_token: this.$store.state.userInfo.access_token
         }
       })
         .then(data => {
