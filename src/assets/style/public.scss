@@ -1,0 +1,31 @@
+$font-11:#111111;
+$font-ff:#ffffff;
+$font-99: #999999;
+$font-bc:#bcc9d1;
+$border-ec: #ECECEC;
+$border-99:#999999;
+$bg-f6: #f6f6f6;
+$bg-ec:#ececec;
+$bg-white:#ffffff;
+$primary: #3BA9F5;
+$secondary: #57caff;
+$danger: #FF5454;
+$nav-bg:white;
+$header-height:4.4rem;
+$header-bg:#3ba9f5;
+$fot-height:4.9rem;
+$fot-actived-height:5.7rem;
+@mixin linear-bg() {
+    background-image: linear-gradient(180deg, $primary 0%, $secondary 100%);
+}
+
+@mixin clearFix() {
+    &:after {
+        content: "";
+        height: 0;
+        line-height: 0;
+        display: block;
+        visibility: hidden;
+        clear: both
+    }
+}

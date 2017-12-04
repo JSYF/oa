@@ -1,0 +1,345 @@
+@font-face {
+    font-family: "oa-icon";
+    src: url(iconfont.eot);
+    src: url(iconfont.eot?#iefix) format('embedded-opentype'), url(iconfont.woff) format('woff'), url(iconfont.ttf) format('truetype'), url(iconfont.svg#iconfont) format('svg');
+}
+
+.oa-icon {
+    font-family: "oa-icon" !important;
+    font-size: 16px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.work:before {
+    content: "\e62e";
+}
+
+.add:before {
+    content: "\e636";
+}
+
+.telephone:before {
+    content: "\e633";
+}
+
+.scan-code:before {
+    content: "\e639";
+}
+
+.back:before {
+    content: "\e63a";
+}
+
+.add-member:before {
+    content: "\e63b";
+}
+
+.add-task:before {
+    content: "\e63c";
+}
+
+.add-staff:before {
+    content: "\e63d";
+}
+
+.group-message:before {
+    content: "\e63e";
+}
+
+.pwd2:before {
+    content: "\e63f";
+}
+
+.phone:before {
+    content: "\e640";
+}
+
+.telephone2:before {
+    content: "\e641";
+}
+
+.delete:before {
+    content: "\e642";
+}
+
+.pwd:before {
+    content: "\e643";
+}
+
+.feedback2:before {
+    content: "\e644";
+}
+
+.company:before {
+    content: "\e646";
+}
+
+.file:before {
+    content: "\e648";
+}
+
+.remind:before {
+    content: "\e649";
+}
+
+.Tenure:before {
+    content: "\e64a";
+}
+
+.feedback1:before {
+    content: "\e650";
+}
+
+.keyboard:before {
+    content: "\e651";
+}
+
+.my-people:before {
+    content: "\e652";
+}
+
+.my-person:before {
+    content: "\e653";
+}
+
+.expression:before {
+    content: "\e654";
+}
+
+.add-file-circle:before {
+    content: "\e655";
+}
+
+.voice:before {
+    content: "\e656";
+}
+
+.photo:before {
+    content: "\e657";
+}
+
+.shoot:before {
+    content: "\e658";
+}
+
+.file-cancel:before {
+    content: "\e659";
+}
+
+.Magnifier:before {
+    content: "\e65a";
+}
+
+.drop-down:before {
+    content: "\e65b";
+}
+
+.disagree:before {
+    content: "\e66b";
+}
+
+.agree:before {
+    content: "\e66c";
+}
+
+.add-image:before {
+    content: "\e66d";
+}
+
+.add-file:before {
+    content: "\e66e";
+}
+
+.approval-waiting:before {
+    content: "\e66f";
+}
+
+.system-message:before {
+    content: "\e670";
+}
+
+.filter-down:before {
+    content: "\e673";
+}
+
+.record-cancel:before {
+    content: "\e675";
+}
+
+.record-fail:before {
+    content: "\e676";
+}
+
+.record:before {
+    content: "\e677";
+}
+
+.id-code:before {
+    content: "\e678";
+}
+
+.clockT-18:before {
+    content: "\e679";
+}
+
+.clock-18:before {
+    content: "\e67a";
+}
+
+.clock-custom:before {
+    content: "\e67b";
+}
+
+.clock-12:before {
+    content: "\e67c";
+}
+
+.download:before {
+    content: "\e67d";
+}
+
+.pause:before {
+    content: "\e67e";
+}
+
+.male:before {
+    content: "\e674";
+}
+
+.female:before {
+    content: "\e681";
+}
+
+.filter-up:before {
+    content: "\e682";
+}
+
+.check-nopass:before {
+    content: "\e671";
+}
+
+.check-revoke:before {
+    content: "\e672";
+}
+
+.check-pass:before {
+    content: "\e680";
+}
+
+.overdue:before {
+    content: "\e683";
+}
+
+.yes-circle:before {
+    content: "\e684";
+}
+
+.no-circle:before {
+    content: "\e685";
+}
+
+.regular-member:before {
+    content: "\e686";
+}
+
+.use-car:before {
+    content: "\e687";
+}
+
+.train:before {
+    content: "\e688";
+}
+
+.raise-salary:before {
+    content: "\e689";
+}
+
+.recruit:before {
+    content: "\e68a";
+}
+
+.office-supplies:before {
+    content: "\e68b";
+}
+
+.fill-card:before {
+    content: "\e68c";
+}
+
+.work-overtime:before {
+    content: "\e68d";
+}
+
+.purchase:before {
+    content: "\e68e";
+}
+
+.promote:before {
+    content: "\e68f";
+}
+
+.leave-office:before {
+    content: "\e690";
+}
+
+.business-travel:before {
+    content: "\e691";
+}
+
+.approve:before {
+    content: "\e67f";
+}
+
+.Deleteexpression:before {
+    content: "\e692";
+}
+
+.organization:before {
+    content: "\e693";
+}
+
+.Framework:before {
+    content: "\e694";
+}
+
+.file1:before {
+    content: "\e695";
+}
+
+.Camera:before {
+    content: "\e696";
+}
+
+.iphonex:before {
+    content: "\e697";
+}
+
+.Password:before {
+    content: "\e698";
+}
+
+.task:before {
+    content: "\e6a3";
+}
+
+.personal:before {
+    content: "\e6b5";
+}
+
+.organization1:before {
+    content: "\e6b6";
+}
+
+.Framework1:before {
+    content: "\e6b7";
+}
+
+.break:before {
+    content: "\e6b8";
+}
+
+.break1:before {
+    content: "\e6b9";
+}

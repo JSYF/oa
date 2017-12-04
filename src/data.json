@@ -1,0 +1,144 @@
+{
+    "lunch": {
+        "status": true,
+        "code": 200,
+        "msg": "succcess",
+        "data": {
+            "processType": [
+                {
+                    "id": 1,
+                    "name": "人事",
+                    "company_id": null,
+                    "processList": [
+                        {
+                            "processmark": "1",
+                            "processname": "测试",
+                            "pic": "http://ovu972ix7.bkt.clouddn.com/default.jpg"
+                        },
+                        {
+                            "processmark": "10000089mobile_19",
+                            "processname": "请假",
+                            "pic": "http://ovu972ix7.bkt.clouddn.com/default.jpg"
+                        },
+                        {
+                            "processmark": "admin_12",
+                            "processname": "加班",
+                            "pic": "http://ovu972ix7.bkt.clouddn.com/default.jpg"
+                        }
+                    ]
+                },
+                {
+                    "id": 2,
+                    "name": "行政",
+                    "company_id": null,
+                    "processList": []
+                },
+                {
+                    "id": 3,
+                    "name": "其他",
+                    "company_id": null,
+                    "processList": []
+                }
+            ]
+        }
+    },
+    "approveData": {
+        "unApprove": [
+            {
+                "id": "10000000025mobile_1511340565289",
+                "status": 1,
+                "company_id": 12345,
+                "enddate": null,
+                "createdate": 1511340565306,
+                "context": "[{\"id\":9,\"label\":\"请假类型\",\"type\":2,\"values\":\"病假\"},{\"id\":10,\"label\":\"请假天数\",\"type\":4,\"values\":\"cc\"}]",
+                "author": 10000000025,
+                "nodemark": "116",
+                "is_read": false,
+                "name": "请假"
+            },
+            {
+                "id": "10000000025mobile_1511340248082",
+                "status": 1,
+                "company_id": 12345,
+                "enddate": null,
+                "createdate": 1511340248105,
+                "context": "[{\"id\":9,\"label\":\"请假类型\",\"type\":2,\"values\":\"事假\"},{\"id\":10,\"label\":\"请假天数\",\"type\":4,\"values\":\"11\"}]",
+                "author": 10000000025,
+                "nodemark": "116",
+                "is_read": false,
+                "name": "请假"
+            }
+        ]
+    },
+    "approveFormData": {
+        "nodemark": "112",
+        "processmark": "1",
+        "processname": "测试",
+        "nodeForm": [
+            {
+                "id": 1,
+                "label": "测试下拉",
+                "type": 1,
+                "view": "{\n      \"elementType\":\"select\",\n      \"defaultValue\":\"请选择\",\n      \"data\":[\n        {\n          \"value\":\"请选择\",\n          \"text\":\"请选择\"\n        },\n      {\n        \"value\":\"事假\",\n        \"text\":\"事假\"\n      },\n      {\n        \"value\":\"病假\",\n        \"text\":\"病假\"\n      },\n      {\n        \"value\":\"丧假\",\n        \"text\":\"丧假\"\n      },\n      {\n        \"value\":\"婚假\",\n        \"text\":\"婚假\"\n      }\n      ]\n    }",
+                "is_must": 0
+            },
+            {
+                "id": 2,
+                "label": "附件1",
+                "type": 10,
+                "view": null,
+                "is_must": 0
+            },
+            {
+                "id": 4,
+                "label": "测试单选\n",
+                "type": 2,
+                "view": "{\n      \"elementType\":\"radio\",\n      \"defaultValue\":\"请选择\",\n      \"data\":[\n        {\n          \"value\":\"请选择\",\n          \"text\":\"请选择\"\n        },\n      {\n        \"value\":\"事假\",\n        \"text\":\"事假\"\n      },\n      {\n        \"value\":\"病假\",\n        \"text\":\"病假\"\n      },\n      {\n        \"value\":\"丧假\",\n        \"text\":\"丧假\"\n      },\n      {\n        \"value\":\"婚假\",\n        \"text\":\"婚假\"\n      }\n      ]\n    }",
+                "is_must": 0
+            },
+            {
+                "id": 5,
+                "label": "附件2",
+                "type": 10,
+                "view": null,
+                "is_must": 0
+            },
+            {
+                "id": 6,
+                "label": "测复选框",
+                "type": 3,
+                "view": "{\n      \"elementType\":\"checkBox\",\n      \"defaultValue\":\"请选择\",\n      \"data\":[\n        {\n          \"value\":\"请选择\",\n          \"text\":\"请选择\"\n        },\n      {\n        \"value\":\"事假\",\n        \"text\":\"事假\"\n      },\n      {\n        \"value\":\"病假\",\n        \"text\":\"病假\"\n      },\n      {\n        \"value\":\"丧假\",\n        \"text\":\"丧假\"\n      },\n      {\n        \"value\":\"婚假\",\n        \"text\":\"婚假\"\n      }\n      ]\n    }",
+                "is_must": 0
+            },
+            {
+                "id": 7,
+                "label": "测试单行",
+                "type": 4,
+                "view": " {\n      \"elementType\":\"input\",\n      \"type\":\"text\",\n      \"placeholder\":\"请输入审批名\"\n    }",
+                "is_must": 0
+            },
+            {
+                "id": 8,
+                "label": "测试多行",
+                "type": 5,
+                "view": " {\n      \"elementType\":\"textarea\",\n      \"placeholder\":\"请输入详细内容\"\n    }",
+                "is_must": 0
+            },
+            {
+                "id": 15,
+                "label": "测试日期区间",
+                "type": 7,
+                "view": "{\n    \"data\": [\n        {\n            \"label\": \"开始时间\"\n        },\n        {\n            \"label\": \"结束时间\"\n        }\n    ]\n}",
+                "is_must": 0
+            },
+            {
+                "id": 19,
+                "label": "测试日期",
+                "type": 6,
+                "view": "{}",
+                "is_must": 0
+            }
+        ],
+        "copier": []
+    }
+}
