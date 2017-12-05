@@ -163,7 +163,8 @@ export default {
         name: item.name,
         status: this.slideIndex,
         type: this.getListParam.type,
-        nodemark: item.nodemark
+        nodemark: item.nodemark,
+        approveStatus: item.status
       };
       this.$store.dispatch("setApproveParams", params);
       this.$router.push({ name: "approveDetails" });

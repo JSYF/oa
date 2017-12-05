@@ -2,24 +2,21 @@
   <div class='approveDetails'>
     <pubHeader v-bind:headerData="headerData"></pubHeader>
     <div class='details-content' v-if="contentData">
+      <div class='approveStatus' v-if="approveStatus == 2 || approveStatus == 3">
+        <i :class="[approveStatus == 2 ? 'check-pass':'check-nopass','oa-icon']"></i>
+      </div>
       <div class='form-item'>
         <mt-cell title='流程名称' :value='contentData.name'></mt-cell>
       </div>
       <div class='form-item-box' v-for="(formItem,index) in  formData" :key='index'>
         <div class='form-item' v-for="(item,index2) in  formItem" :key='index2'>
           <mt-cell :title='item.label' :value='item.values' v-if="item.type !=4&&item.type !=5 &&item.type !=10"></mt-cell>
-          <div v-bind:class="[item.type == 4?'isInput':'','input-item']" v-if="item.type ==4||item.type ==5">
-            <p class='label'>{{item.label}}</p>
-            <div class="input-content">
-              {{item.values}}
-            </div>
-          </div>
-          <!-- <div>
-
-          </div> -->
+          <pubShowInput class='input-item' v-if="item.type ==4 || item.type ==5" :label="item.label" :values="item.values" :isInput="isInput(item.type)"></pubShowInput>
           <pubShowFile class='file-item' :fileData="item" v-if="item.type == 10"></pubShowFile>
         </div>
       </div>
+      <!-- <div class=''></div> -->
+      <detailsNode :nodeData="contentData.nodelog"></detailsNode>
     </div>
   </div>
 </template>
@@ -29,11 +26,15 @@
 import moment from "moment";
 import pubHeader from "../public/Header";
 import pubShowFile from "../public/PubShowFile";
+import pubShowInput from "../public/PubShowInput";
+import detailsNode from "./DetailsNode";
 export default {
   name: "detail",
   components: {
     pubHeader,
-    pubShowFile
+    pubShowFile,
+    pubShowInput,
+    detailsNode
   },
   data() {
     return {
@@ -42,10 +43,18 @@ export default {
         backUrl: { name: "approve" }
       },
       contentData: null,
-      formData: null
+      formData: null,
+      approveStatus: null
     };
   },
   methods: {
+    isInput(type) {
+      if (type == 4) {
+        return true;
+      } else {
+        return false;
+      }
+    },
     getDetails(params) {
       params.access_token = this.$store.state.userInfo.access_token;
       params.userId = this.$store.state.userInfo.userId;
@@ -113,6 +122,7 @@ export default {
     next(vm => {
       // 通过 `vm` 访问组件实例
       vm.getDetails(vm.$store.state.approve.detailsParam);
+      vm.approveStatus = vm.$store.state.approve.detailsParam.approveStatus;
     });
   }
 };
@@ -147,36 +157,6 @@ export default {
     }
     .form-item-box {
       margin-bottom: 1rem;
-      .form-item {
-        .input-item {
-          padding: 1.6rem 0 1.1rem;
-          min-height: 4.5rem;
-          font-size: 1.5rem;
-          .label {
-            width: 9rem;
-            margin-bottom: 1.6rem;
-            color: $font-99;
-          }
-          .input-content {
-            color: $font-11;
-            word-break: break-all;
-            line-height: 2rem;
-            text-align: justify;
-          }
-          &.isInput {
-            min-height: 2.1rem;
-            line-height: 2.1rem;
-            @include clearFix();
-            .label {
-              margin-bottom: 0;
-              float: left;
-            }
-            .input-content {
-              float: right;
-            }
-          }
-        }
-      }
     }
   }
 }

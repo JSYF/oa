@@ -180,6 +180,7 @@ export default {
         }
       }
       &.file-add-btn {
+        text-align: left;
         button {
           width: 4.4rem;
           height: 4.4rem;
