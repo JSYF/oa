@@ -9,6 +9,7 @@
 import pubHeader from "./public/Header";
 import tabs from "./public/Tabs";
 import addBtn from "./public/AddBtn";
+import store from "../store";
 export default {
   components: { tabs, addBtn, pubHeader },
   data() {
@@ -34,6 +35,24 @@ export default {
         backUrl: "/"
       }
     };
+  },
+  beforeRouteLeave(to, from, next) {
+    let arr = document.querySelectorAll(".approve-list .content");
+    let topArr = [];
+    arr.forEach(item => {
+      topArr.push(item.scrollTop);
+    });
+    this.$store.commit("SAVEAPPROVELISTPOSITION", topArr);
+    next();
+  },
+  beforeRouteEnter: (to, from, next) => {
+    next(vm => {
+      let arr = document.querySelectorAll(".approve-list .content");
+      let topArr = vm.$store.state.approve.listScrollTop;
+      for (let i = 0; i < arr.length; i++) {
+        arr[i].scrollTop = topArr[i];
+      }
+    });
   }
 };
 </script>

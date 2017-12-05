@@ -185,7 +185,7 @@ export default {
               }
             }
           } else if (data.currentValue == undefined) {
-            data.currentValue = "";
+            data.currentValue = "[]";
           }
           break;
         case 4:
@@ -215,7 +215,7 @@ export default {
               }
             }
           } else if (data.currentValue == undefined) {
-            data.currentValue = "";
+            data.currentValue = "[]";
           }
           break;
         case 7:
@@ -243,7 +243,7 @@ export default {
               this.$toast("开始时间需小于结束时间");
             }
           } else {
-            data.currentValue = "";
+            data.currentValue = "[]";
           }
           break;
       }
@@ -259,7 +259,8 @@ export default {
   height: 100%;
   overflow: hidden;
   .from-content {
-    height: calc(100% - #{$header-height});
+    margin-top: 1rem;
+    @include contentHeight(1,0);
     overflow-y: scroll;
     .content-item {
       > div {

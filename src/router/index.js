@@ -16,7 +16,7 @@ const router = new Router({
       component: Approve
     },
     {
-      path: "/approve/details/:approvalId",
+      path: "/approve/details",
       component: ApproveDetails,
       props: true,
       name: "approveDetails"
@@ -46,7 +46,11 @@ const router = new Router({
   ]
 })
 router.beforeResolve((to, from, next) => {
-  store.dispatch("updateUser");
-  next();
+
+  store.dispatch("updateUser")
+    .then(() => {
+      console.log("用户信息更新");
+      next();
+    })
 })
 export default router;

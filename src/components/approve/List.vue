@@ -72,8 +72,6 @@ export default {
   methods: {
     slideFunc(data) {
       this.slideIndex = data;
-      // this.listData.splice(0, this.listData.length);
-      // console.log(JSON.stringify(this.listData))
       if (this.slideIndex == 0) {
         if (this.approvingData.listData.length == 0) {
           this.getList();
@@ -108,7 +106,7 @@ export default {
         .post(baseURL + "/oa-work/approval/selectApprovalList", param)
         .then(
           result => {
-            // console.log("审批列表成功:", result);
+            console.log("审批列表成功:", result);
             if (result.ok && result.data.status == true) {
               let list =
                 this.slideIndex == 0
@@ -160,18 +158,15 @@ export default {
     },
     //跳转到详情页
     toDetails(item) {
-      console.log(item);
       const params = {
+        approvalId: item.id,
         name: item.name,
         status: this.slideIndex,
         type: this.getListParam.type,
         nodemark: item.nodemark
       };
-      window.localStorage.setItem("approveDetails", JSON.stringify(params));
-      this.$router.push({
-        name: "approveDetails",
-        params: { approvalId: item.id }
-      });
+      this.$store.dispatch("setApproveParams", params);
+      this.$router.push({ name: "approveDetails" });
     },
     //下拉刷新
     loadTop() {

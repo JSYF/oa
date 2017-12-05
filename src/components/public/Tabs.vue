@@ -46,7 +46,7 @@ export default {
     height: 100%;
     .mint-tab-container-wrap {
       height: 100%;
-      .mint-tab-container-item{
+      .mint-tab-container-item {
         height: calc(100% - #{$fot-height} - #{$header-height});
         padding-bottom: $fot-height;
       }
@@ -69,7 +69,7 @@ export default {
       }
       &.is-selected {
         position: relative;
-        height:$fot-actived-height;
+        height: $fot-actived-height;
         .mint-tab-item-label {
           display: flex;
           align-items: flex-end;
