@@ -13,22 +13,27 @@ export default {
   props: ["data"],
   data() {
     return {
-      value: "",
-      inputData: this.data.view
+      value: ""
     };
   },
   model: {
     props: "returnData",
     event: "returnDataFunc"
   },
+  computed: {
+    inputData() {
+      if (this.data.view) {
+        return this.data.view;
+      } else {
+        return { placeholder: "" };
+      }
+    }
+  },
   methods: {
     inputing() {
-      console.log("clientHeight", this.$refs.textarea.clientHeight);
-      console.log("scrollHeight", this.$refs.textarea.scrollHeight);
       this.$refs.textarea.style.height = "auto";
       this.$refs.textarea.style.height =
         this.$refs.textarea.scrollHeight + "px";
-
       this.$emit("returnDataFunc", this.value);
     }
   }
@@ -39,10 +44,9 @@ export default {
 .pubTextarea {
   margin: 1rem 0;
   .bg-wrap {
-    padding: 0 1.2rem;
-    padding-top: 1.3rem;
+    padding: 1.3rem 1.2rem 0.7rem;
     background: $bg-white;
-    min-height: 6.2rem;
+    min-height: 5.5rem;
   }
   .input-label {
     font-size: 1.5rem;

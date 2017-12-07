@@ -1,26 +1,26 @@
 <template>
-    <div class='pubSelect'>
-        <div @click='addSelect' class='select-title-bar'>
-            <mt-cell v-bind:click='addSelect' :value="num" is-link>
-                <label slot="title" class='label'>
-                    {{label}}
-                    <span>(点击头像取消)</span>
-                </label>
-            </mt-cell>
-        </div>
-        <div class='select-box'>
-            <div class='select-item' v-for="(item,index) in selectList" :key='item.id' @click='delSelect(index)'>
-                <img :src="item.img" class='user-img'>
-                <p class='user-name'>{{item.name}}</p>
-            </div>
-        </div>
+  <div class='pubSelect'>
+    <div @click='addSelect' class='select-title-bar'>
+      <mt-cell v-bind:click='addSelect' :value="num" :is-link="select">
+        <label slot="title" class='label'>
+          {{label}}
+          <span v-if="select">(点击头像取消)</span>
+        </label>
+      </mt-cell>
     </div>
+    <div class='select-box'>
+      <div class='select-item' v-for="(item,index) in selectList" :key='item.id' @click='delSelect(index)'>
+        <img :src="item.img" class='user-img'>
+        <p class='user-name'>{{item.name}}</p>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
 export default {
   name: "pubSelect",
-  props: ["data", "label"],
+  props: ["data", "label", "unSelect"],
   model: {
     props: "returnData",
     event: "returnDataFunc"
@@ -75,6 +75,14 @@ export default {
       //   });
       //   return arr;
     },
+    select() {
+      console.log(this.unSelect);
+      if (this.unSelect == true) {
+        return false;
+      } else {
+        return true;
+      }
+    },
     num() {
       return this.selectList.length + "人";
     }
@@ -118,7 +126,13 @@ export default {
       position: absolute;
       bottom: 0;
     }
+    .mint-cell {
+      background: none;
+      height: 5rem;
+      line-height: 5rem;
+    }
     .mint-cell-wrapper {
+      background: none;
       height: 100%;
       .label {
         font-size: 1.6rem;

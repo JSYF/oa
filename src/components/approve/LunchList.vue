@@ -31,9 +31,6 @@ export default {
       }
     };
   },
-  mounted() {
-    this.getLunchList();
-  },
   methods: {
     //跳转到发起审批页面
     toLunching: function(item) {
@@ -60,6 +57,13 @@ export default {
           console.log("err", e);
         });
     }
+  },
+  beforeRouteEnter: (to, from, next) => {
+    next(vm => {
+      if (!vm.lunchList) {
+        vm.getLunchList();
+      }
+    });
   }
 };
 </script>

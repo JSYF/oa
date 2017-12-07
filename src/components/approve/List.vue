@@ -86,6 +86,7 @@ export default {
         }
       }
     },
+    /**获取审批列表 */
     getList(moreStr) {
       let param = {
         access_token: this.$store.state.userInfo.access_token,
@@ -106,7 +107,7 @@ export default {
         .post(baseURL + "/oa-work/approval/selectApprovalList", param)
         .then(
           result => {
-            console.log("审批列表成功:", result);
+            // console.log("审批列表成功:", result);
             if (result.ok && result.data.status == true) {
               let list =
                 this.slideIndex == 0
@@ -156,15 +157,14 @@ export default {
           console.log("查询审批列表失败", e);
         });
     },
-    //跳转到详情页
+    /**跳转到详情页 */
     toDetails(item) {
       const params = {
         approvalId: item.id,
         name: item.name,
-        status: this.slideIndex,
+        status: item.status,
         type: this.getListParam.type,
-        nodemark: item.nodemark,
-        approveStatus: item.status
+        nodemark: item.nodemark
       };
       this.$store.dispatch("setApproveParams", params);
       this.$router.push({ name: "approveDetails" });

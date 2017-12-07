@@ -56,6 +56,7 @@ export default {
     headerData() {
       let data = {
         backUrl: { name: "approveList" },
+        title:"发起审批",
         btnText: "发布"
       };
       if (this.formData) {
@@ -234,13 +235,15 @@ export default {
               }
             }
           } else if (data.currentValue != undefined) {
-            let temp = JSON.parse(data.currentValue);
-            if (temp[0] == null || temp[1] == null) {
-              status = false;
-              this.$toast("请选择完整的时间区间");
-            } else if (temp[0] > temp[1]) {
-              status = false;
-              this.$toast("开始时间需小于结束时间");
+            if (data.currentValue != "[]") {
+              let temp = JSON.parse(data.currentValue);
+              if (temp[0] == null || temp[1] == null) {
+                status = false;
+                this.$toast("请选择完整的时间区间");
+              } else if (temp[0] > temp[1]) {
+                status = false;
+                this.$toast("开始时间需小于结束时间");
+              }
             }
           } else {
             data.currentValue = "[]";

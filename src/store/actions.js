@@ -4,23 +4,7 @@ export default {
 
         const userInfo =
             {
-                "access_token": "d2d5b571-bc5a-4127-bab9-be1e95fa34cd",
-                "token_type": "bearer",
-                "refresh_token": "53c614ab-1037-4576-b5f1-7d584c558629",
-                "expires_in": 89999,
-                "scope": "app",
-                "realname": "火腿肠",
-                "company_id": 12345,
-                "company_name": "葡萄科技公司",
-                "userStatus": 0,
-                "userId": 10000000081,
-                "sex": 1,
-                "pic": "http://ovu972ix7.bkt.clouddn.com/10000000081.jpg",
-                "ismanager": 1,
-                "phone": "18813974681",
-                "userSig": "eJxFkF1PwjAUhv-Lrom2HQ3WOxwNjIJKXESumtJ2tDD21U4kxv-Otox4Lp8nb857zm*QrD4eRFlaxYXnYa2C5wAEox7rn9LWmovU67rFCBMEwF1*69rZIu84gBiiEIB-aZXOvU1tn4NgmCc4aGcPLV-TXRRvZnR6dIc0lJnJ4PhsZHVZLfAudvpdRqdtlTi2VjHVuKGX2EzfXkWhPiOUbDfef2UOZ-JxiZsrYpIwNmdNtTdz84IRofdl6sT7A7sq47ZGSCYED9Lbs*44hpBAMgFo4ELKosk999dS9x-5uwGOdVgo",
-                "sdkAppid": 1400039795,
-                "accountType": "15187"
+                "access_token": "a6ef92c2-21be-4685-ae31-f8acde232f70", "token_type": "bearer", "refresh_token": "c3d00982-d971-48b9-a97f-8fdc58a45c83", "expires_in": 73025, "scope": "app", "realname": "火腿肠", "company_id": 12345, "company_name": "葡萄科技公司", "userStatus": 0, "userId": 10000000081, "sex": 1, "pic": "http://ovu972ix7.bkt.clouddn.com/10000000081.jpg", "ismanager": 1, "phone": "18813974681", "userSig": "eJxFkF1PwjAUhv-LbjXkdLUbNfFiQSAjYBZ1K-SmGWsLFfddF4nxv7stI57L58nJed-z47xv32ZpVRkpUitwI51HB5z7EavvyjRKpNqqpscuoS7ATXaqaU1ZDBwQQS4G*JdGqsIabcY9BNPM0aRbc*r5bhkvwvUuyvAq3iz46RDarL57jWSHz*H6w4NLHkuWWE78zb6J8sAsg6tkXfASbwNOjvtVCS1L6Bz4c12rRGvesQMr8Geo6bF8uh2TFzEWHKI89DEw9SmZpDW5GnhfwHM9D-kTT7Os-CqssNdKjR-5-QMus1fA", "sdkAppid": 1400039795, "accountType": "15187"
             }
         return new Promise((resolve, reject) => {
             commit("UPDATE_USERINFO", userInfo);

@@ -10,11 +10,17 @@ $bg-white:#ffffff;
 $primary: #3BA9F5;
 $secondary: #57caff;
 $danger: #FF5454;
+$warning:#FFBB3A;
+$green:#27dabc;
 $nav-bg:white;
 $header-height:4.4rem;
-$header-bg:#3ba9f5;
+$header-bg:$primary;
 $fot-height:4.9rem;
 $fot-actived-height:5.7rem;
+$col-agress:$green;
+$col-disagree:$danger;
+//审批尾部高度
+$agreesFooterHeight:5rem;
 @mixin linear-bg() {
     background-image: linear-gradient(180deg, $primary 0%, $secondary 100%);
 }

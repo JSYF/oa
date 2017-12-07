@@ -32,17 +32,22 @@ export default {
 <style lang="scss">
 .pubInput {
   margin: 1rem 0;
+
   .bg-wrap {
     height: 100%;
     padding: 0 1.2rem;
     background: $bg-white;
+    @include clearFix();
   }
   .input-label {
     padding-top: 1.2rem;
     font-size: 1.5rem;
+    float: left;
   }
   .input {
-    width: 100%;
+    float: right;
+    text-align: right;
+    width: 75%;
     margin-top: 0.5rem;
     line-height: 4rem;
     font-size: 1.5rem;
