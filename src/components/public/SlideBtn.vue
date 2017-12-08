@@ -9,12 +9,15 @@
 <script>
 export default {
   name: "slideBtn",
-  props: ["slideData"],
   data() {
     return {
-      data: this.slideData,
+      data: this.$store.state.approve.slideData,
       slideStatus: false
     };
+  },
+  model: {
+    props: "returnData",
+    event: "returnDataFunc"
   },
   methods: {
     btnClick: function(index) {
@@ -26,7 +29,7 @@ export default {
       } else {
         this.slideStatus = true;
       }
-      this.$emit("slideFunc", index);
+      this.$emit("returnDataFunc", index);
     }
   }
 };
@@ -35,7 +38,7 @@ export default {
 .slideBtn-wrap {
   position: fixed;
   width: 100%;
-  top:$header-height;
+  top: $header-height;
   z-index: 99;
   background: $bg-white;
   text-align: center;

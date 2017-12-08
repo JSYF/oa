@@ -37,28 +37,28 @@ export default {
   name: "detailsNode",
   props: ["nodeData"],
   data() {
-    return {
-      listData: this.nodeData
-    };
+    return {};
   },
-  created() {
-    this.listData.forEach((item, index) => {
-      if (item.actortype == 2 || item.actortype == 3) {
-        this.$post({
-          url: "/oa-work/approval/selectTranLong",
-          postData: {
-            access_token: this.$store.state.userInfo.access_token,
-            nodeLogId: item.id
-          }
-        }).then(data => {
-          this.$set(this.listData[index], "approveValue", {
-            isOpen: false,
-            list: data
+  computed: {
+    listData() {
+      let arr = this.nodeData;
+      arr.forEach((item, index) => {
+        if (item.actortype == 2 || item.actortype == 3) {
+          this.$post({
+            url: "/oa-work/approval/selectTranLong",
+            postData: {
+              access_token: this.$store.state.userInfo.access_token,
+              nodeLogId: item.id
+            }
+          }).then(data => {
+            item.approveValue = { list: data, isOpen: false };
           });
-        });
-      }
-    });
+        }
+      });
+      return arr;
+    }
   },
+  created() {},
   methods: {
     nodeStatus(status) {
       if (status == 0) {
@@ -86,7 +86,6 @@ export default {
       if (item.actortype == 1) {
         //根据ID获取名字
         // id:item.operator
-
         return this.getName();
       } else if (item.actortype == 2) {
         return "会签";

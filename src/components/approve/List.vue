@@ -1,8 +1,8 @@
 <template>
   <div class='approve-list'>
-    <slide-btn v-bind:slideData="slideData" @slideFunc="slideFunc"></slide-btn>
-    <div class='content'>
-      <mt-loadmore :top-method="loadTop" :bottom-method="loadBottom" :auto-fill="false" :bottom-all-loaded="allLoaded" ref="loadmore" @top-status-change='loadTopStauts'>
+    <slide-btn v-model="slideIndex"></slide-btn>
+    <div class='content' v-if="listData">
+      <mt-loadmore :top-method="loadTop" :auto-fill="false" ref="loadmore" @top-status-change='loadTopStauts'>
         <mt-button v-for="item in listData" :key='item.id' class='approve-item' @click='toDetails(item)'>
           <div class='avatar-box'>
             <img src="http://www.w3school.com.cn/i/eg_tulip.jpg">
@@ -21,6 +21,7 @@
         </div>
       </mt-loadmore>
     </div>
+    <div>{{change}}</div>
   </div>
 </template>
 
@@ -33,162 +34,185 @@ export default {
   components: { slideBtn },
   data() {
     return {
-      approvingData: {
-        //未审批数据
-        listData: [],
-        startNum: 0,
-        status: 1
-      },
-      approvedData: {
-        //已审批数据
-        listData: [],
-        startNum: 0,
-        status: 0
-      },
-      listData: [],
       slideIndex: 0, //0 未审批 1 已审批
-      slideData: [
-        {
-          id: 0,
-          text: "待审批"
-        },
-        {
-          id: 1,
-          text: "已审批"
-        }
-      ],
       allLoaded: false,
+      listData: null,
+      isInit: true,
       getListParam: {
         type: parseInt(this.id) + 1, //1 我发起的 2 我审批的 3 抄送我的
-        num: 5 //分页数
+        num: this.$store.state.approve.listPageNum //分页数
       },
       topStatus: null
     };
   },
+  computed: {
+    change() {
+      let data = this.$store.state.approve.willUpdate;
+      if (this.isInit) {
+        this.isInit = false;
+      } else {
+        this.updatedData(data);
+      }
+      return data;
+    }
+  },
   mounted() {
     this.getList();
   },
-  computed: {},
-  methods: {
-    slideFunc(data) {
-      this.slideIndex = data;
+  watch: {
+    slideIndex() {
+      let status = this.$store.state.approve.listSlideIndex;
+      status[this.id] == this.slideIndex;
+      this.$store.commit("SETLISTSLIDEINDEX", status);
+      let listData = this.$store.state.approve.listData[this.id];
       if (this.slideIndex == 0) {
-        if (this.approvingData.listData.length == 0) {
+        if (listData.approvingData.listData.length == 0) {
           this.getList();
         } else {
-          this.listData = this.approvingData.listData;
+          this.listData = listData.approvingData.listData;
         }
+      } else if (listData.approvedData.listData.length == 0) {
+        this.getList();
       } else {
-        if (this.approvedData.listData.length == 0) {
-          this.getList();
-        } else {
-          this.listData = this.approvedData.listData;
+        this.listData = listData.approvedData.listData;
+      }
+    }
+  },
+  methods: {
+    //发起和审批后更新
+    updatedData(data) {
+      if (data.type == parseInt(this.id) + 1) {
+        let listData = this.$store.state.approve.listData[this.id];
+        if (data.type == 1) {
+          //发起
+          listData.approvingData.listData = [];
+          listData.approvingData.startNum = 0;
+          this.$store.commit("SETLISTDATA", { data: listData, index: this.id });
+          this.getList({ index: 0, type: data.type });
+        } else if (data.type == 2) {
+          //审批
+          listData.approvingData.listData = [];
+          listData.approvingData.startNum = 0;
+          listData.approvedData.listData = [];
+          listData.approvedData.startNum = 0;
+          this.$store.commit("SETLISTDATA", { data: listData, index: this.id });
+          this.getList({ index: 1, type: data.type });
+          this.getList({ index: 0, type: data.type });
         }
       }
     },
+
     /**获取审批列表 */
-    getList(moreStr) {
+    getList(obj) {
+      let listData = JSON.parse(
+        JSON.stringify(this.$store.state.approve.listData[this.id])
+      );
+
+      let index = null; //已审批还是待审批
+      if (obj && obj.index) {
+        index = obj.index;
+      } else {
+        index = this.slideIndex;
+      }
+      let type = null;
+      if (obj && obj.type) {
+        type = obj.type;
+      } else {
+        type = this.getListParam.type;
+      }
       let param = {
         access_token: this.$store.state.userInfo.access_token,
         userId: this.$store.state.userInfo.userId,
         num: this.getListParam.num,
-        type: this.getListParam.type,
+        type: type,
         companyId: this.$store.state.userInfo.company_id
       };
-      if (this.slideIndex == 0) {
-        param.status = this.approvingData.status;
-        param.startNum = this.approvingData.startNum;
+
+      if (index == 0) {
+        param.status = listData.approvingData.status;
+        param.startNum = listData.approvingData.startNum;
       } else {
-        param.status = this.approvedData.status;
-        param.startNum = this.approvedData.startNum;
+        param.status = listData.approvedData.status;
+        param.startNum = listData.approvedData.startNum;
       }
-      // console.log("查询审批参数：", param);
-      this.$http
-        .post(baseURL + "/oa-work/approval/selectApprovalList", param)
-        .then(
-          result => {
-            // console.log("审批列表成功:", result);
-            if (result.ok && result.data.status == true) {
-              let list =
-                this.slideIndex == 0
-                  ? this.approvingData.listData
-                  : this.approvedData.listData;
-              let data = result.data.data;
-              data.forEach(item => {
-                item.context = JSON.parse(item.context);
-                item.context.forEach(item2 => {
-                  if (item2.type == 6) {
-                    item2.values = moment(item2.values).format("MM-DD HH:mm");
-                  } else if (item2.type == 7) {
-                    let temp = JSON.parse(item2.values);
-                    item2.values =
-                      moment(temp[0]).format("MM-DD HH:mm") +
-                      " - " +
-                      moment(temp[1]).format("MM-DD HH:mm");
-                  }
-                });
-                list.push(item);
-              });
-              if (this.slideIndex == 0) {
-                this.approvingData.startNum += this.getListParam.num;
-              } else {
-                this.approvedData.startNum += this.getListParam.num;
+      // console.log("查询参数", param);
+      this.$post({
+        url: "/oa-work/approval/selectApprovalList",
+        postData: param
+      })
+        .then(data => {
+          // console.log("查询列表数据", data);
+          let list =
+            index == 0
+              ? listData.approvingData.listData
+              : listData.approvedData.listData;
+          data.forEach(item => {
+            item.context = JSON.parse(item.context);
+            item.context.forEach(item2 => {
+              if (item2.type == 6) {
+                item2.values = moment(item2.values).format("MM.DD HH:mm");
+              } else if (item2.type == 7) {
+                let temp = JSON.parse(item2.values);
+                item2.values =
+                  moment(temp[0]).format("MM.DD HH:mm") +
+                  " - " +
+                  moment(temp[1]).format("MM.DD HH:mm");
               }
-              this.listData = list;
-              if (data.length < 5) {
-                this.allLoaded = true;
-              }
-              if (moreStr != undefined) {
-                if (moreStr == "top") {
-                  this.$refs.loadmore.onTopLoaded();
-                } else {
-                  this.$refs.loadmore.onBottomLoaded();
-                }
-              }
-            } else {
-              throw "err";
-            }
-          },
-          err => {
-            throw err;
+            });
+            list.push(item);
+          });
+          if (index == 0) {
+            listData.approvingData.startNum += this.getListParam.num;
+            this.listData = listData.approvingData.listData;
+          } else {
+            listData.approvedData.startNum += this.getListParam.num;
+            this.listData = listData.approvedData.listData;
           }
-        )
+          this.$store.commit("SETLISTDATA", { data: listData, index: this.id });
+          if (obj) {
+            if (obj.isLoadTop) {
+              this.$refs.loadmore.onTopLoaded();
+            }
+          }
+        })
         .catch(e => {
-          console.log("查询审批列表失败", e);
+          console.log("err", e);
+          this.$toast("查询审批列表失败");
         });
     },
     /**跳转到详情页 */
     toDetails(item) {
+      // console.log("item", item);
       const params = {
         approvalId: item.id,
         name: item.name,
-        status: item.status,
         type: this.getListParam.type,
         nodemark: item.nodemark
       };
+      if (this.slideIndex == 0) {
+        params.status = 1;
+      } else {
+        params.status = 0;
+      }
       this.$store.dispatch("setApproveParams", params);
       this.$router.push({ name: "approveDetails" });
     },
     //下拉刷新
     loadTop() {
+      let listData = this.$store.state.approve.listData[this.id];
       if (this.slideIndex == 0) {
-        this.approvingData.listData = [];
-        this.approvingData.startNum = 0;
+        listData.approvingData.listData = [];
+        listData.approvingData.startNum = 0;
       } else {
-        this.approvedData.listData = [];
-        this.approvedData.startNum = 0;
+        listData.approvedData.listData = [];
+        listData.approvedData.startNum = 0;
       }
-      this.listData.splice(0, this.listData.length);
-      this.allLoaded = false;
-      this.getList("top");
+      this.$store.commit("SETLISTDATA", { data: listData, index: this.id });
+      this.getList({ isLoadTop: true });
     },
     //监听下拉状态
     loadTopStauts(status) {
       this.topStatus = status;
-    },
-    //
-    loadBottom() {
-      this.getList("bottom");
     }
   }
 };
@@ -262,13 +286,18 @@ export default {
         float: left;
         margin-left: 1.5rem;
         text-align: left;
+        max-width: 18rem;
         .title {
           font-size: 1.5rem;
           color: $font-11;
           margin-bottom: 1rem;
         }
         p {
+          width: 100%;
+          overflow: hidden;
           font-size: 1.3rem;
+          text-overflow: ellipsis;
+          white-space: nowrap;
           &:last-child {
             margin-top: 1rem;
           }
@@ -278,7 +307,7 @@ export default {
         float: right;
         font-size: 1.2rem;
         color: $font-99;
-        margin-right: 1.5rem;
+        margin-right: 1.3rem;
       }
     }
   }

@@ -76,7 +76,6 @@ export default {
       //   return arr;
     },
     select() {
-      console.log(this.unSelect);
       if (this.unSelect == true) {
         return false;
       } else {
@@ -89,7 +88,6 @@ export default {
   },
   methods: {
     addSelect() {
-      console.log("123");
       this.selectList.push({
         id: "1",
         name: "雷神",

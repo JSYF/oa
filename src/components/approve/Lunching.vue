@@ -29,7 +29,6 @@ import pubFile from "../public/PubFile";
 import pubSelect from "../public/PubSelect";
 export default {
   name: "approve-lunching",
-  props: ["params"],
   components: {
     pubHeader,
     pubRadio,
@@ -56,7 +55,7 @@ export default {
     headerData() {
       let data = {
         backUrl: { name: "approveList" },
-        title:"发起审批",
+        title: "发起审批",
         btnText: "发布"
       };
       if (this.formData) {
@@ -89,13 +88,12 @@ export default {
       return data;
     }
   },
-  mounted() {
-    this.getData();
-  },
-  watch: {
-    params() {
-      this.getData();
-    }
+  beforeRouteEnter: (to, from, next) => {
+    next(vm => {
+      //先清除数据
+      vm.formData = null;
+      vm.getData();
+    });
   },
   methods: {
     getData() {
@@ -104,7 +102,7 @@ export default {
         postData: {
           access_token: this.$store.state.userInfo.access_token,
           companyId: this.$store.state.userInfo.company_id,
-          processmark: this.params
+          processmark: this.$store.state.approve.lunchingParam
         }
       })
         .then(data => {
@@ -112,7 +110,6 @@ export default {
             item.view = JSON.parse(item.view);
           });
           this.formData = data;
-          console.log(data);
         })
         .catch(e => {
           this.$toast("获取失败，请重试");
@@ -149,10 +146,21 @@ export default {
         companyId: this.$store.state.userInfo.company_id,
         start: JSON.stringify(params)
       };
-      console.log("发起审批参数", JSON.stringify(postParams));
       this.$post({ url: "/company/approval/confirm", postData: postParams })
         .then(data => {
-          console.log("success", data);
+          this.$toast("审批发起成功");
+          let saveParams = {
+            approvalId: data.approvalId,
+            name: this.formData.processname,
+            type: 1,
+            status: 1,
+            nodemark: this.formData.nodemark
+          };
+          //刷新我发起列表
+          this.$store.commit("SETWILLUPDATE", { type: 1 });
+          //保存传递给详情的参数
+          this.$store.commit("SETAPPROVEPARAMS", saveParams);
+          this.$router.push({ name: "approveDetails" });
         })
         .catch(e => {
           this.$toast("审批发起失败");

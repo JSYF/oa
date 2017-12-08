@@ -22,15 +22,15 @@ export default {
   name: "tabs",
   props: ["tabData"],
   components: { approveList },
-  created: function() {},
   data() {
     return {
-      selected: 0
+      selected: this.$store.state.approve.listIndex
     };
   },
   watch: {
     selected: function(index) {
-      this.listParam = index;
+      // this.listParam = index;
+      this.$store.commit("SETLISTINDEX", index);
     }
   },
   methods: {

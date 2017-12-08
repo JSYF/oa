@@ -35,10 +35,8 @@ export default {
     //跳转到发起审批页面
     toLunching: function(item) {
       const params = item.processmark;
-      this.$router.push({
-        name: "approveLunching",
-        params: { params }
-      });
+      this.$router.push({ name: "approveLunching" });
+      this.$store.commit("SETLUNCHINGPARAM", params);
     },
     getLunchList() {
       this.$post({

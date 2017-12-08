@@ -30,11 +30,11 @@
       <detailsNode :nodeData="contentData.nodelog"></detailsNode>
     </div>
     <div class='details-footer' v-if="hasFooter">
-      <mt-button class='btn-item' @click="agree">
+      <mt-button class='btn-item' @click="postApprove(1)">
         <i class='oa-icon agree'></i>
         <span>同意</span>
       </mt-button>
-      <mt-button class='btn-item' @click="disagree">
+      <mt-button class='btn-item' @click="postApprove(0)">
         <i class='oa-icon disagree'></i>
         <span>不同意</span>
       </mt-button>
@@ -116,7 +116,6 @@ export default {
           this.formData = this.slotData(data);
           this.approveForm = data.nodeForm;
           this.changeData();
-          console.log(this.contentData);
         })
         .catch(e => {
           console.log(e);
@@ -150,9 +149,9 @@ export default {
               if (item.values != "[]") {
                 let temp = JSON.parse(item.values);
                 item.values =
-                  moment(temp[0]).format("YYYY-MM-DD HH:mm") +
+                  moment(temp[0]).format("YYYY.MM.DD HH:mm") +
                   " - " +
-                  moment(temp[1]).format("YYYY-MM-DD HH:mm");
+                  moment(temp[1]).format("YYYY.MM.DD HH:mm");
               } else {
                 item.values = "无";
               }
@@ -177,7 +176,7 @@ export default {
                 item.values = "无";
               } else {
                 item.values = moment(parseInt(item.values)).format(
-                  "YYYY-MM-DD HH:mm:ss"
+                  "YYYY.MM.DD HH:mm:ss"
                 );
               }
               break;
@@ -185,8 +184,8 @@ export default {
         });
       });
     },
-    /**同意 */
-    agree() {
+    /**审批同意或不同意 @augments type 0不同意 1同意*/
+    postApprove(type) {
       let params = {
         nodemark: this.$store.state.approve.detailsParam.nodemark,
         userId: this.$store.state.userInfo.userId.toString(),
@@ -196,27 +195,25 @@ export default {
         nodeForm: [],
         attachment: []
       };
-      for (let i = 0; i < this.approveForm.length; i++) {
-        if (!this.mustToast(this.approveForm[i])) {
-          return;
-        }
-        let temp = {
-          id: this.approveForm[i].id,
-          label: this.approveForm[i].label,
-          type: this.approveForm[i].type,
-          values: this.approveForm[i].currentValue
-        };
-        if (this.approveForm[i].type != 10) {
-          params.nodeForm.push(temp);
-        } else {
-          params.attachment.push(temp);
+      params.result = type == 0 ? 1 : 0;
+      if (type == 1) {
+        for (let i = 0; i < this.approveForm.length; i++) {
+          if (!this.mustToast(this.approveForm[i])) {
+            return;
+          }
+          let temp = {
+            id: this.approveForm[i].id,
+            label: this.approveForm[i].label,
+            type: this.approveForm[i].type,
+            values: this.approveForm[i].currentValue
+          };
+          if (this.approveForm[i].type != 10) {
+            params.nodeForm.push(temp);
+          } else {
+            params.attachment.push(temp);
+          }
         }
       }
-      console.log("请求参数", {
-        access_token: this.$store.state.userInfo.access_token,
-        companyId: this.$store.state.userInfo.company_id,
-        approveResult: params
-      });
       this.$post({
         url: "/company/approval/approve",
         postData: {
@@ -230,22 +227,22 @@ export default {
           saveParam.status = 0;
           this.$store.dispatch("setApproveParams", saveParam);
           this.getDetails(saveParam);
-          this.$toast("同意审批成功");
+          //刷新我审批列表
+          this.$store.commit("SETWILLUPDATE", { type: 2 });
+          if (type == 0) {
+            this.$toast("不同意审批成功");
+          } else {
+            this.$toast("同意审批成功");
+          }
         })
         .catch(e => {
           console.log("err", e);
-          this.$toast("同意审批失败,请重试");
+          if (type == 0) {
+            this.$toast("不同意审批失败,请重试");
+          } else {
+            this.$toast("同意审批失败,请重试");
+          }
         });
-    },
-    /**不同意 */
-    disagree() {
-      let params = {
-        nodemark: this.$store.state.approve.detailsParam.nodemark,
-        userId: this.$store.state.userInfo.userId,
-        approvalId: this.$store.state.approve.detailsParam.approvalId,
-        result: 1,
-        resultText: this.approveText.currentValue
-      };
     },
     /**检查表单的完整性 */
     mustToast(data) {
