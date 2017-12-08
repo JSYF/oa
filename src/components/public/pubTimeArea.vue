@@ -1,6 +1,6 @@
 <template>
   <div class='pubTimeArea'>
-    <mt-cell class='timePicker' :title="data.label" is-link>
+    <mt-cell class='timeArea' :title="data.label" is-link>
       <mt-button class='timer-btn' @click='timeAreaOpen(1)'>{{showValue1}}</mt-button>
       <span class='span'>—</span>
       <mt-button class='timer-btn' @click='timeAreaOpen(2)'>{{showValue2}}</mt-button>
@@ -61,28 +61,28 @@ export default {
 <style lang="scss">
 .pubTimeArea {
   height: 5.6rem;
-  .mint-cell-wrapper {
-    height: 100%;
-    .mint-cell-value{
-      margin-right: 0.5rem;
+  .timeArea {
+    .mint-cell-wrapper {
+      height: 100%;
+      .mint-cell-value {
+        margin-right: 0.5rem !important;
+      }
+      .mint-cell-text {
+        font-size: 1.5rem;
+        color: $font-11;
+      }
+      .mint-cell-allow-right {
+        display: none;
+      }
     }
-    .mint-cell-text {
-      font-size: 1.5rem;
-      color: $font-11;
-    }
-    .mint-cell-allow-right {
-      display: none;
-    }
-  }
-  .span {
-    font-size: 1.5rem;
-  }
-  .timePicker {
     .timer-btn {
       width: 11rem;
       padding: 0;
       font-size: 1.3rem;
     }
+  }
+  .span {
+    font-size: 1.5rem;
   }
 }
 </style>

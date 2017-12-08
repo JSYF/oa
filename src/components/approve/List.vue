@@ -2,22 +2,24 @@
   <div class='approve-list'>
     <slide-btn v-model="slideIndex"></slide-btn>
     <div class='content' v-if="listData">
-      <mt-loadmore :top-method="loadTop" :auto-fill="false" ref="loadmore" @top-status-change='loadTopStauts'>
-        <mt-button v-for="item in listData" :key='item.id' class='approve-item' @click='toDetails(item)'>
-          <div class='avatar-box'>
-            <img src="http://www.w3school.com.cn/i/eg_tulip.jpg">
+      <mt-loadmore :top-method="loadTop" ref="loadmore" @top-status-change='loadTopStauts'>
+        <div v-infinite-scroll="loadMore" infinite-scroll-immediate-check="false" infinite-scroll-disabled="loading" infinite-scroll-distance="10">
+          <mt-button v-for="item in listData" :key='item.id' class='approve-item' @click='toDetails(item)'>
+            <div class='avatar-box'>
+              <img src="http://www.w3school.com.cn/i/eg_tulip.jpg">
+            </div>
+            <div class='content-wrap'>
+              <div class='title'>{{item.name}}</div>
+              <p v-for="content in item.context" :key='content.id'>{{content.label}} {{content.values}}</p>
+            </div>
+            <p class="create-time">{{item.createdate|timeFilter('MM-DD')}}</p>
+          </mt-button>
+          <div slot="top" class="mint-loadmore-top">
+            <span class='icon' v-show="topStatus !== 'loading'" :class="{ 'rotate': topStatus === 'drop' }">
+              <i class='oa-icon break1'></i>
+            </span>
+            <span class='refreshing' v-show="topStatus === 'loading'"><img src="~@/assets/img/refreshing.png"></span>
           </div>
-          <div class='content-wrap'>
-            <div class='title'>{{item.name}}</div>
-            <p v-for="content in item.context" :key='content.id'>{{content.label}} {{content.values}}</p>
-          </div>
-          <p class="create-time">{{item.createdate|timeFilter('MM-DD')}}</p>
-        </mt-button>
-        <div slot="top" class="mint-loadmore-top">
-          <span class='icon' v-show="topStatus !== 'loading'" :class="{ 'rotate': topStatus === 'drop' }">
-            <i class='oa-icon break1'></i>
-          </span>
-          <span class='refreshing' v-show="topStatus === 'loading'"><img src="~@/assets/img/refreshing.png"></span>
         </div>
       </mt-loadmore>
     </div>
@@ -35,7 +37,7 @@ export default {
   data() {
     return {
       slideIndex: 0, //0 未审批 1 已审批
-      allLoaded: false,
+      loading: false,
       listData: null,
       isInit: true,
       getListParam: {
@@ -51,6 +53,7 @@ export default {
       if (this.isInit) {
         this.isInit = false;
       } else {
+        this.loading = false;
         this.updatedData(data);
       }
       return data;
@@ -101,7 +104,13 @@ export default {
         }
       }
     },
-
+    loadMore() {
+      console.log("loadmore");
+      if (this.loading == false) {
+        this.loading = true;
+        this.getList({ isLoadBottom: true });
+      }
+    },
     /**获取审批列表 */
     getList(obj) {
       let listData = JSON.parse(
@@ -172,6 +181,12 @@ export default {
           if (obj) {
             if (obj.isLoadTop) {
               this.$refs.loadmore.onTopLoaded();
+            } else if (obj.isLoadBottom) {
+              if (data.length < 5) {
+                this.loading = true;
+              } else {
+                this.loading = false;
+              }
             }
           }
         })
@@ -207,6 +222,7 @@ export default {
         listData.approvedData.listData = [];
         listData.approvedData.startNum = 0;
       }
+      this.loading = false;
       this.$store.commit("SETLISTDATA", { data: listData, index: this.id });
       this.getList({ isLoadTop: true });
     },

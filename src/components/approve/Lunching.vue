@@ -277,24 +277,24 @@ export default {
       > div {
         border-bottom: 1px solid $border-ec;
       }
-      .mint-cell {
-        height: 100%;
+    }
+    .mint-cell {
+      height: 100%;
+      background-image: none;
+      .mint-cell-value {
+        margin-right: 1.7rem;
+      }
+      .mint-cell-wrapper {
+        padding: 0 1.2rem;
         background-image: none;
-        .mint-cell-wrapper {
-          padding: 0 1.2rem;
-          background-image: none;
-          .mint-cell-value {
-            margin-right: 1.7rem;
-          }
-          .mint-cell-allow-right {
-            &:after {
-              border: solid 2px $border-99;
-              border-bottom-width: 0;
-              border-left-width: 0;
-              right: 1rem;
-              height: 0.9rem;
-              width: 0.9rem;
-            }
+        .mint-cell-allow-right {
+          &:after {
+            border: solid 2px $border-99;
+            border-bottom-width: 0;
+            border-left-width: 0;
+            right: 1rem;
+            height: 0.9rem;
+            width: 0.9rem;
           }
         }
       }

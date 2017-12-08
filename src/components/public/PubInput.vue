@@ -47,7 +47,6 @@ export default {
   .input {
     float: right;
     text-align: right;
-    width: 75%;
     margin-top: 0.5rem;
     line-height: 4rem;
     font-size: 1.5rem;
