@@ -1,6 +1,6 @@
 <template>
   <div class='approve-list'>
-    <slide-btn v-model="slideIndex"></slide-btn>
+    <slide-btn v-model="slideIndex" from="approve"></slide-btn>
     <div class='content' v-if="listData">
       <mt-loadmore :top-method="loadTop" ref="loadmore" @top-status-change='loadTopStauts'>
         <div v-infinite-scroll="loadMore" infinite-scroll-immediate-check="false" infinite-scroll-disabled="loading" infinite-scroll-distance="10">
@@ -23,7 +23,7 @@
         </div>
       </mt-loadmore>
     </div>
-    <div>{{change}}</div>
+    <div v-show="false">{{change}}</div>
   </div>
 </template>
 
@@ -245,27 +245,9 @@ export default {
 .approve-list {
   height: 100%;
   .content {
-    height: calc(100% - 5.1rem);
-    margin-top: 5.1rem;
+    height: calc(100% - #{$slideBarHeight});
+    margin-top: $slideBarHeight + 1rem;
     overflow-y: scroll;
-  }
-  .mint-loadmore-top {
-    .icon {
-      display: block;
-      i {
-        font-size: 1.4rem;
-      }
-      &.rotate {
-        transform: rotate(180deg);
-      }
-    }
-    .refreshing {
-      img {
-        width: 4.2rem;
-        animation: rotate 1s infinite;
-        height: 4.2rem;
-      }
-    }
   }
   .approve-item {
     border-radius: 1rem;

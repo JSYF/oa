@@ -77,7 +77,8 @@ const mutations = {
     SAVEAPPROVELISTPOSITION(state, params) {
         state.listScrollTop = params;
     },
-    SETLISTINDEX(state, index) {
+    //设置审批列表位置
+    SETLISTINDEX_APPROVE(state, index) {
         state.listIndex = index;
     },
     SETLISTSLIDEINDEX(state, arr) {
@@ -85,10 +86,8 @@ const mutations = {
     },
     SETLISTDATA(state, param) {
         state.listData[param.index] = param.data;
-        console.log("获取", state.listData);
     },
     SETWILLUPDATE(state, param) {
-        console.log("update", param)
         state.willUpdate = param;
     }
 }

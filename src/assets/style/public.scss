@@ -21,6 +21,8 @@ $col-agress:$green;
 $col-disagree:$danger;
 //审批尾部高度
 $agreesFooterHeight:5rem;
+//滑动条高度
+$slideBarHeight:3.3rem+0.8rem;
 @mixin linear-bg() {
     background-image: linear-gradient(180deg, $primary 0%, $secondary 100%);
 }

@@ -9,11 +9,21 @@
 <script>
 export default {
   name: "slideBtn",
+  props: ["from"],
   data() {
     return {
-      data: this.$store.state.approve.slideData,
+      // data: this.$store.state.approve.slideData,
       slideStatus: false
     };
+  },
+  computed: {
+    data() {
+      if (this.from == "task") {
+        return this.$store.state.task.slideData;
+      } else {
+        return this.$store.state.approve.slideData;
+      }
+    }
   },
   model: {
     props: "returnData",
@@ -24,12 +34,23 @@ export default {
       if (index == this.slideStatus) {
         return;
       }
+      let returnData = null;
       if (index == 0) {
+        if (this.from == "task") {
+          returnData = this.$store.state.task.slideData[0].id;
+        } else {
+          returnData = this.$store.state.approve.slideData[0].id;
+        }
         this.slideStatus = false;
       } else {
+        if (this.from == "task") {
+          returnData = this.$store.state.task.slideData[1].id;
+        } else {
+          returnData = this.$store.state.approve.slideData[1].id;
+        }
         this.slideStatus = true;
       }
-      this.$emit("returnDataFunc", index);
+      this.$emit("returnDataFunc", returnData);
     }
   }
 };

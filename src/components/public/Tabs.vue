@@ -3,6 +3,7 @@
     <mt-tab-container v-model="selected">
       <mt-tab-container-item v-bind:id="tab.id" v-for="tab in tabData.data" :key="tab.id">
         <approveList v-bind:id="tab.id" v-if="tabData.from === 'approve' "></approveList>
+        <taskList v-bind:id="tab.id" v-if="tabData.from === 'task'"></taskList>
       </mt-tab-container-item>
     </mt-tab-container>
     <mt-tabbar v-model="selected" fixed class="pb-tabs">
@@ -17,11 +18,11 @@
 
 <script>
 import approveList from "../approve/List";
-
+import taskList from "../task/List";
 export default {
   name: "tabs",
   props: ["tabData"],
-  components: { approveList },
+  components: { approveList, taskList },
   data() {
     return {
       selected: this.$store.state.approve.listIndex
@@ -29,8 +30,11 @@ export default {
   },
   watch: {
     selected: function(index) {
-      // this.listParam = index;
-      this.$store.commit("SETLISTINDEX", index);
+      //设置审批列表位置
+      if (this.tabData.from) {
+        this.$store.commit("SETLISTINDEX_APPROVE", index);
+      } else {
+      }
     }
   },
   methods: {
