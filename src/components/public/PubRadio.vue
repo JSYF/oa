@@ -2,9 +2,9 @@
   <div class='pubRadio'>
     <bg-wrap v-bind:bgStatus="boxStatus" @close="closeBox"></bg-wrap>
     <div class='radio-input' @click='inputClick'>
-      <mt-cell :title="data.label" :value="value" is-link></mt-cell>
+      <mt-cell :title="label" :value="showValue" is-link></mt-cell>
     </div>
-    <mt-radio @click='closeBox' align="right" v-model="value" :options="listData" class='radio-list' v-if="boxStatus">
+    <mt-radio align="right" v-model="radioValue" :options="data" class='radio-list' v-if="boxStatus">
     </mt-radio>
   </div>
 </template>
@@ -14,39 +14,51 @@
 import bgWrap from "./BgWrap";
 export default {
   name: "pubRadio",
-  props: ["data"],
+  props: ["data", "label", "value"],
   components: {
     bgWrap
   },
   model: {
-    props: "returnData",
+    props: "returnValue",
     event: "returnDataFunc"
   },
   data() {
     return {
       boxStatus: false,
-      value: this.data.view.defaultValue
+      radioValue: ""
     };
+  },
+  computed: {
+    showValue() {
+      let str = "";
+      for (let i = 0; i < this.data.length; i++) {
+        if (this.data[i].value == this.radioValue) {
+          str = this.data[i].label;
+          break;
+        }
+      }
+      return str;
+    }
+  },
+  mounted() {
+    for (let i = 0; i < this.data.length; i++) {
+      if (this.data[i].isSelect == true) {
+        this.radioValue = this.data[i].value;
+        break;
+      }
+    }
   },
   watch: {
     value() {
-      setTimeout(() => {
-        if (this.value == this.data.view.defaultValue) {
-          this.$emit("returnDataFunc", "");
-        } else {
-          this.$emit("returnDataFunc", this.value);
-        }
-        this.closeBox();
-      }, 300);
-    }
-  },
-  computed: {
-    listData() {
-      let tempData = [];
-      this.data.view.data.forEach(item => {
-        tempData.push({ label: item.text, value: item.value });
-      });
-      return tempData;
+      this.radioValue = this.value.toString();
+    },
+    radioValue() {
+      this.$emit("returnDataFunc", this.radioValue);
+      if (this.boxStatus == true) {
+        setTimeout(() => {
+          this.closeBox();
+        }, 300);
+      }
     }
   },
   methods: {

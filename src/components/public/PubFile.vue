@@ -1,7 +1,7 @@
 <template>
   <div class='pubFile'>
     <div class="bg-wrap">
-      <p class='file-title'>{{data.label}}</p>
+      <p class='file-title' v-if="label">{{label}}</p>
       <div class='file-img-add'>
         <div v-for="(imgItem,index) in imgList" :key='index' class='file-item'>
           <div class='img-wrap'>
@@ -23,71 +23,35 @@
         </div>
       </div>
       <div class='file-list'>
-        <div class='file-item' v-for="(fileItem,index) in fileList" :key="index">
-          <i class='left-icon oa-icon file'></i>
-          <p class='file-name'>{{fileItem.fileName}}</p>
-          <p class='file-size'>{{fileItem.fileSize}}</p>
-          <i class='right-icon oa-icon file-cancel' @click='delFile(index)'></i>
-        </div>
+        <pubFileItem v-for="(fileItem,index) in fileList" :key="index" @fileItemFunc="flieItemFunc(index)" :name="fileItem.fileName" :size="fileItem.fileSize"></pubFileItem>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import pubFileItem from "./PubFileItem";
 export default {
   name: "pubFile",
-  props: ["data"],
+  props: ["label", "value"],
+  components: {
+    pubFileItem
+  },
   data() {
     return {
-      imgList: [
-        {
-          path: "",
-          localPath: "http://mat1.gtimg.com/fashion/sitong/2017.10.8/4444.jpg"
-        },
-        {
-          path: "",
-          localPath: "http://mat1.gtimg.com/fashion/sitong/2017.10.8/4444.jpg"
-        },
-        {
-          path: "",
-          localPath: "http://mat1.gtimg.com/fashion/sitong/2017.10.8/4444.jpg"
-        },
-        {
-          path: "",
-          localPath: "http://mat1.gtimg.com/fashion/sitong/2017.10.8/4444.jpg"
-        },
-        {
-          path: "",
-          localPath: "http://mat1.gtimg.com/fashion/sitong/2017.10.8/4444.jpg"
-        }
-      ],
-      fileList: [
-        {
-          fileName:
-            "abcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabc",
-          fileSize: "7.2M",
-          path: "",
-          localPath: ""
-        },
-        {
-          fileName: "abc",
-          fileSize: "7.2M",
-          path: "",
-          localPath: ""
-        },
-        {
-          fileName: "abc",
-          fileSize: "7.2M",
-          path: "",
-          localPath: ""
-        }
-      ]
+      imgList: [],
+      fileList: []
     };
   },
   model: {
     props: "returnData",
     event: "returnDataFunc"
+  },
+  watch: {
+    value() {
+      this.imgList = this.value.imgList;
+      this.fileList = this.value.fileList;
+    }
   },
   methods: {
     addImage() {
@@ -110,24 +74,30 @@ export default {
       });
       this.postData();
     },
-    delFile(index) {
+    flieItemFunc(index) {
       this.fileList.splice(index, 1);
       this.postData();
     },
     postData() {
-      let arr = [];
-      this.imgList.forEach(item => {
-        arr.push({ fileName: item.path, type: "image" });
-      });
-      this.fileList.forEach(item => {
-        arr.push({
-          fileName: item.path,
-          type: "file",
-          name: item.fileName,
-          size: item.fileSize
-        });
-      });
-      this.$emit("returnDataFunc", JSON.stringify(arr));
+      // let arr = [];
+      // this.imgList.forEach(item => {
+      //   arr.push({ fileName: item.path, type: "image" });
+      // });
+      // this.fileList.forEach(item => {
+      //   arr.push({
+      //     fileName: item.path,
+      //     type: "file",
+      //     name: item.fileName,
+      //     size: item.fileSize
+      //   });
+      // });
+
+      let obj = {
+        imgList: this.imgList,
+        fileList: this.fileList
+      };
+      this.$emit("returnDataFunc", obj);
+      // this.$emit("returnDataFunc", JSON.stringify(arr));
     }
   }
 };
@@ -149,7 +119,7 @@ export default {
     @include clearFix();
     .file-item {
       float: left;
-      width: 25%;
+      width: 20%;
       text-align: center;
       margin-bottom: 1.4rem;
       .img-wrap {
@@ -188,46 +158,6 @@ export default {
             font-size: 4.3rem;
           }
         }
-      }
-    }
-  }
-  .file-list {
-    .file-item {
-      border: 1px solid $border-99;
-      border-radius: 4.5rem;
-      background: $bg-ec;
-      @include clearFix();
-      height: 4.6rem;
-      line-height: 4.6rem;
-      margin-bottom: 1.5rem;
-      padding: 0 1.7rem;
-      .left-icon {
-        float: left;
-        font-size: 1.8rem;
-        width: 5%;
-        color: $font-99;
-      }
-      .file-name {
-        float: left;
-        margin-left: 1rem;
-        width: 67.5%;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        font-size: 1.5rem;
-        color: $font-11;
-      }
-      .file-size {
-        float: left;
-        width: 12%;
-        font-size: 1.4rem;
-        color: $font-99;
-        margin-left: 1%;
-      }
-      .right-icon {
-        float: right;
-        color: $font-99;
-        font-size: 1.4rem;
-        font-weight: bold;
       }
     }
   }

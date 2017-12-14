@@ -1,6 +1,5 @@
 const state = {
     listPageNum: 5,
-
     slideData: [
         {
             id: 1,
@@ -11,59 +10,32 @@ const state = {
             text: "已完成"
         }
     ],
-    listData: [
-        {//我发起的
-            //未完成
-            taskingData: {
-                listData: [],
-                startNum: 0,
-                status: 1
-            },
-            //已完成
-            taskedData: {
-                listData: [],
-                startNum: 0,
-                status: 3
-            }
-        },
-        {//我负责的
-            //未完成
-            taskingData: {
-                listData: [],
-                startNum: 0,
-                status: 1
-            },
-            //已完成
-            taskedData: {
-                listData: [],
-                startNum: 0,
-                status: 3
-            }
-        },
-        {//我执行的
-            //未完成
-            taskingData: {
-                listData: [],
-                startNum: 0,
-                status: 1
-            },
-            //已完成
-            taskedData: {
-                listData: [],
-                startNum: 0,
-                status: 3
-            }
-        },]
+    lunchingFormData: null,
+    remindTime: {
+        remind: "",
+        reday: ""
+    },
+    detailsParams: null
 }
 
 const mutations = {
-    //设置任务列表数据
-    SETLISTDATA_TASK(state, params) {
-        state.listData[param.index] = param.data;
+    //存储提醒时间数据
+    SAVEREMINDTIME(state, params) {
+        state.remindTime = params;
+    },
+    // 存储任务详情参数
+    SAVEDETAILSPARAMS(state, params) {
+        state.detailsParams = params;
+    },
+    //存储发起任务的表单数据
+    SAVELUNCHINGFORMDATA(state, params) {
+        console.log("params", params);
+        state.lunchingFormData = params;
     }
 }
 
 
 export default {
-    state
+    state,
+    mutations
 }

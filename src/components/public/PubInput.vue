@@ -1,8 +1,8 @@
 <template>
   <div class='pubInput'>
     <div class='bg-wrap'>
-      <p class='input-label'>{{data.label}}</p>
-      <input class='input' :placeholder="inputData.placeholder" @keyup='inputing' v-model='value' />
+      <p class='input-label' v-if="label">{{label}}</p>
+      <input class='input' :placeholder="placeholder" @keyup='inputing' v-model='showValue' />
     </div>
   </div>
 </template>
@@ -10,20 +10,24 @@
 <script>
 export default {
   name: "pubInput",
-  props: ["data"],
+  props: ["label", "placeholder", "type", "value"],
   data() {
     return {
-      value: "",
-      inputData: this.data.view
+      showValue: ""
     };
   },
   model: {
     props: "returnData",
     event: "returnDataFunc"
   },
+  watch: {
+    value() {
+      this.showValue = this.value;
+    }
+  },
   methods: {
     inputing() {
-      this.$emit("returnDataFunc", this.value);
+      this.$emit("returnDataFunc", this.showValue);
     }
   }
 };
@@ -45,11 +49,15 @@ export default {
     float: left;
   }
   .input {
-    float: right;
-    text-align: right;
+    width: 100%;
     margin-top: 0.5rem;
     line-height: 4rem;
     font-size: 1.5rem;
+  }
+  .input-label + .input {
+    width: initial;
+    float: right;
+    text-align: right;
   }
 }
 </style>

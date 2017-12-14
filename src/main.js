@@ -29,7 +29,7 @@ Vue.use(pubFunc);
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
-new Vue({
+let defaultVue = new Vue({
   el: '#app',
   router,
   store,
@@ -37,5 +37,6 @@ new Vue({
   components: { App }
 })
 
+window.defaultVue = defaultVue
 
 Vue.http.options.emulateJSON = true;

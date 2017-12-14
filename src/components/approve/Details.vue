@@ -12,22 +12,26 @@
         <div class='form-item' v-for="(item,index2) in  formItem" :key='index2'>
           <mt-cell :title='item.label' :value='item.values' v-if="item.type !=4&&item.type !=5 &&item.type !=10"></mt-cell>
           <pubShowInput class='input-item' v-if="item.type ==4 || item.type ==5" :label="item.label" :values="item.values" :isInput="isInput(item.type)"></pubShowInput>
-          <pubShowFile class='file-item' :fileData="item" v-if="item.type == 10"></pubShowFile>
+          <pubShowFile class='file-item' :label="item.label" :fileData="item.values" v-if="item.type == 10"></pubShowFile>
         </div>
       </div>
       <div class='approveing-form' v-if="hasFooter&&approveForm">
         <div class='content-item' v-for="(item,index) in approveForm" :key='index'>
-          <pubRadio v-if="item.type == 2 || item.type==1" v-bind:data='item' v-model="item.currentValue"></pubRadio>
-          <pubCheckBox v-if="item.type == 3 " v-bind:data='item' v-model="item.currentValue"></pubCheckBox>
-          <pubInput class='input-item' v-if="item.type == 4 " v-model='item.currentValue' v-bind:data="item"></pubInput>
-          <pubTextarea class='input-item' v-if="item.type == 5 " v-model='item.currentValue' v-bind:data="item"></pubTextarea>
-          <pubTimePicker v-if="item.type == 6" v-model='item.currentValue' v-bind:data="item"></pubTimePicker>
-          <pubTimeArea v-if="item.type == 7" v-model='item.currentValue' v-bind:data="item"></pubTimeArea>
+          <pub-radio v-if="item.type == 2 || item.type==1" v-bind:label="item.label" v-bind:data='selectData(item.view.data)' v-model="item.currentValue"></pub-radio>
+          <pub-check-box v-if="item.type == 3 " v-bind:data='item' v-model="item.currentValue"></pub-check-box>
+          <pub-input class='input-item' v-if="item.type == 4 " v-model='item.currentValue' v-bind:placeholder="item.view.placeholder" v-bind:label="item.label" v-bind:type="item.view.type"></pub-input>
+          <pub-textarea class='input-item' v-if="item.type == 5 " v-model='item.currentValue' v-bind:data="item"></pub-textarea>
+          <pub-time-picker v-if="item.type == 6" v-model='item.currentValue' v-bind:label="item.label"></pub-time-picker>
+          <pub-time-area v-if="item.type == 7" v-model='item.currentValue' v-bind:data="item"></pub-time-area>
+        </div>
+        <div class='content-item' v-for="(item,index) in formData.file" :key='index'>
+          <pub-file v-model='item.currentValue' v-bind:label="item.label" v-if="item.type == 10"></pub-file>
         </div>
       </div>
-      <pubTextarea v-if="hasFooter" class='input-item' v-model='approveText.currentValue' v-bind:data="approveText"></pubTextarea>
-      <pubSelect label="抄送人" class='content-item' v-model='contentData.copier' v-bind:data="formData.copier" :unSelect="true"></pubSelect>
-      <detailsNode :nodeData="contentData.nodelog"></detailsNode>
+      <pub-textarea v-if="hasFooter" class='input-item' v-model='approveText.currentValue' v-bind:label="approveText.label"></pub-textarea>
+      <pub-select label="抄送人" class='content-item' v-model='contentData.copier' v-bind:data="formData.copier" :unSelect="true"></pub-select>
+      <details-node :nodeData="contentData.nodelog">
+      </details-node>
     </div>
     <div class='details-footer' v-if="hasFooter">
       <mt-button class='btn-item' @click="postApprove(1)">
@@ -58,7 +62,7 @@ import pubTimeArea from "../public/PubTimeArea";
 import pubFile from "../public/PubFile";
 import pubSelect from "../public/PubSelect";
 export default {
-  name: "detail",
+  name: "approveDetail",
   components: {
     pubHeader,
     pubShowFile,
@@ -338,6 +342,13 @@ export default {
           break;
       }
       return status;
+    },
+    selectData(data) {
+      let arr = [{ label: "请选择", value: "", isSelect: true }];
+      data.forEach(item => {
+        arr.push({ label: item.value, value: item.value, isSelect: false });
+      });
+      return arr;
     }
   },
   computed: {
@@ -353,13 +364,16 @@ export default {
       }
     }
   },
-  beforeRouteEnter(to, from, next) {
-    next(vm => {
-      // 通过 `vm` 访问组件实例
-      vm.contentData = null;
-      vm.getDetails(vm.$store.state.approve.detailsParam);
-    });
+  created() {
+    this.getDetails(this.$store.state.approve.detailsParam);
   }
+  // beforeRouteEnter(to, from, next) {
+  //   next(vm => {
+  //     // 通过 `vm` 访问组件实例
+  //     vm.contentData = null;
+  //     vm.getDetails(vm.$store.state.approve.detailsParam);
+  //   });
+  // }
 };
 </script>
 
@@ -434,6 +448,7 @@ export default {
     z-index: 999;
     background: white;
     width: 100%;
+    border-top: 1px solid $border-ec;
     height: $agreesFooterHeight;
     line-height: $agreesFooterHeight;
     @include clearFix();

@@ -1,7 +1,7 @@
 <template>
   <mt-header :title="headerData.title" class='pub-header'>
     <router-link :to="headerData.backUrl" slot="left">
-      <mt-button>
+      <mt-button @click.prevent="back">
         <i class='oa-icon back'></i>
       </mt-button>
     </router-link>
@@ -17,6 +17,16 @@ export default {
   methods: {
     btnSubmit() {
       this.$emit("rightBtnMehod");
+    },
+    back() {
+      if (this.headerData.isBack) {
+        console.log("back");
+        this.$router.go(-1);
+      } else {
+        console.log("replace");
+        this.$router.replace(this.headerData.backUrl);
+      }
+      // console.log(this.headerData);
     }
   }
 };

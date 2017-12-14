@@ -11,7 +11,7 @@
     <div class='select-box'>
       <div class='select-item' v-for="(item,index) in selectList" :key='item.id' @click='delSelect(index)'>
         <img :src="item.img" class='user-img'>
-        <p class='user-name'>{{item.name}}</p>
+        <p class='user-name'>{{item.realname}}</p>
       </div>
     </div>
   </div>
@@ -20,50 +20,14 @@
 <script>
 export default {
   name: "pubSelect",
-  props: ["data", "label", "unSelect"],
+  props: ["data", "label", "unSelect", "value"],
   model: {
     props: "returnData",
     event: "returnDataFunc"
   },
   data() {
     return {
-      selectList: [
-        {
-          id: "",
-          name: "雷神",
-          img: "http://mat1.gtimg.com/fashion/sitong/2017.10.8/4444.jpg"
-        },
-        {
-          id: "",
-          name: "雷神",
-          img: "http://mat1.gtimg.com/fashion/sitong/2017.10.8/4444.jpg"
-        },
-        {
-          id: "",
-          name: "雷神",
-          img: "http://mat1.gtimg.com/fashion/sitong/2017.10.8/4444.jpg"
-        },
-        {
-          id: "",
-          name: "雷神",
-          img: "http://mat1.gtimg.com/fashion/sitong/2017.10.8/4444.jpg"
-        },
-        {
-          id: "",
-          name: "雷神",
-          img: "http://mat1.gtimg.com/fashion/sitong/2017.10.8/4444.jpg"
-        },
-        {
-          id: "",
-          name: "雷神",
-          img: "http://mat1.gtimg.com/fashion/sitong/2017.10.8/4444.jpg"
-        },
-        {
-          id: "",
-          name: "雷神",
-          img: "http://mat1.gtimg.com/fashion/sitong/2017.10.8/4444.jpg"
-        }
-      ]
+      selectList: []
     };
   },
   computed: {
@@ -75,6 +39,15 @@ export default {
       //   });
       //   return arr;
     },
+    //是否是职能选一个
+    alone() {
+      if (this.isAlone == true) {
+        return false;
+      } else {
+        return true;
+      }
+    },
+    //是否是选择展示
     select() {
       if (this.unSelect == true) {
         return false;
@@ -82,15 +55,25 @@ export default {
         return true;
       }
     },
+    // 已选人数
     num() {
-      return this.selectList.length + "人";
+      if (this.isAlone != true && this.selectList.length != 0) {
+        return this.selectList.length + "人";
+      } else {
+        return "";
+      }
+    }
+  },
+  watch: {
+    value() {
+      this.selectList = this.value;
     }
   },
   methods: {
     addSelect() {
       this.selectList.push({
-        id: "1",
-        name: "雷神",
+        userId: "10000000081",
+        realname: "雷神",
         img: "http://mat1.gtimg.com/fashion/sitong/2017.10.8/4444.jpg"
       });
       this.$emit("returnDataFunc", this.selectList);

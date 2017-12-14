@@ -51,11 +51,15 @@ export default {
         }
         Vue.prototype.$getMan = function (obj) {
             return new Promise((resolve, reject) => {
-                resolve({ name: "雷神", imgsrc: "http://www.w3school.com.cn/i/eg_tulip.jpg" })
+                resolve({ realname: "雷神", imgsrc: "http://www.w3school.com.cn/i/eg_tulip.jpg" })
             })
         }
         Vue.filter("timeFilter", function (value, formatStr) {
-            return moment(value).format(formatStr);
+            if (moment(value).isSame(new Date(), "year")) {
+                return moment(value).format(formatStr);
+            } else {
+                return moment(value).format("YYYY.MM.DD HH:mm")
+            }
         });
     }
 }

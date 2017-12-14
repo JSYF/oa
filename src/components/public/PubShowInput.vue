@@ -40,6 +40,7 @@ export default {
     }
     .input-content {
       float: right;
+      margin-right: 1.7rem;
     }
   }
 }

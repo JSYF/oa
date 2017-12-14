@@ -1,8 +1,8 @@
 <template>
   <div class='pubTextarea'>
     <div class="bg-wrap">
-      <p class='input-label'>{{data.label}}</p>
-      <textarea class='textarea' :placeholder="inputData.placeholder" @keyup='inputing' v-model='value' ref='textarea' />
+      <p class='input-label' v-if="label">{{label}}</p>
+      <textarea class='textarea' :placeholder="placeholder" @keyup='inputing' v-model='inputValue' ref='textarea' />
     </div>
   </div>
 </template>
@@ -10,31 +10,27 @@
 <script>
 export default {
   name: "pubTextarea",
-  props: ["data"],
+  props: ["placeholder", "label", "value"],
   data() {
     return {
-      value: ""
+      inputValue: ""
     };
   },
   model: {
     props: "returnData",
     event: "returnDataFunc"
   },
-  computed: {
-    inputData() {
-      if (this.data.view) {
-        return this.data.view;
-      } else {
-        return { placeholder: "" };
-      }
+  watch: {
+    value() {
+      this.inputValue = this.value;
+      this.$refs.textarea.style.height = "auto";
+      this.$refs.textarea.style.height =
+        this.$refs.textarea.scrollHeight + "px";
     }
   },
   methods: {
     inputing() {
-      this.$refs.textarea.style.height = "auto";
-      this.$refs.textarea.style.height =
-        this.$refs.textarea.scrollHeight + "px";
-      this.$emit("returnDataFunc", this.value);
+      this.$emit("returnDataFunc", this.inputValue);
     }
   }
 };

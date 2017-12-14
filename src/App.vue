@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <keep-alive>
+    <keep-alive :exclude="unKeepLiveComponents">
       <router-view/>
     </keep-alive>
   </div>
@@ -8,7 +8,17 @@
 
 <script>
 export default {
-  name: "app"
+  name: "app",
+  data() {
+    return {
+      unKeepLiveComponents: [
+        "approveDetail",
+        "approve-lunching",
+        "taskRemindTime",
+        "taskDetails"
+      ]
+    };
+  }
 };
 </script>
 

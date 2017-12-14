@@ -6,6 +6,9 @@ import ApproveLunch from "@/components/approve/Lunch"
 import ApproveLunchList from '@/components/approve/LunchList'
 import ApproveLunching from "@/components/approve/Lunching"
 import ApproveDetails from "@/components/approve/Details";
+import TaskLunching from "@/components/task/Lunching";
+import TaskRemindTime from "@/components/task/RemindTime";
+import TaskDetails from "@/components/task/Details";
 Vue.use(Router)
 import store from "../store";
 const router = new Router({
@@ -18,7 +21,6 @@ const router = new Router({
     {
       path: "/approve/details",
       component: ApproveDetails,
-      props: true,
       name: "approveDetails"
     },
     {
@@ -31,9 +33,8 @@ const router = new Router({
         component: ApproveLunchList
       },
       {
-        path: "lunching/:params",
+        path: "lunching",
         name: "approveLunching",
-        props: true,
         component: ApproveLunching
       }
       ]
@@ -42,14 +43,27 @@ const router = new Router({
       path: '/task',
       name: 'task',
       component: Task
+    },
+    {
+      name: "taskDetails",
+      path: "/task/details",
+      component: TaskDetails
+    }, {
+      name: "taskLunching",
+      path: "/task/lunching",
+      component: TaskLunching
+    },
+    {
+      name: "taskRemindTime",
+      path: "/task/lunching/remindTime",
+      component: TaskRemindTime
     }
   ]
 })
 router.beforeResolve((to, from, next) => {
-
   store.dispatch("updateUser")
     .then(() => {
-      console.log("用户信息更新");
+      // console.log("用户信息更新");
       next();
     })
 })

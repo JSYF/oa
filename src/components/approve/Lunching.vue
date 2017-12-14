@@ -3,17 +3,17 @@
     <pubHeader v-bind:headerData="headerData" @rightBtnMehod="postData"></pubHeader>
     <div class='from-content' v-if="formData">
       <div class='content-item' v-for="(item,index) in renderData.form" :key='index'>
-        <pubRadio v-if="item.type == 2 || item.type==1" v-bind:data='item' v-model="item.currentValue"></pubRadio>
-        <pubCheckBox v-if="item.type == 3 " v-bind:data='item' v-model="item.currentValue"></pubCheckBox>
-        <pubInput class='input-item' v-if="item.type == 4 " v-model='item.currentValue' v-bind:data="item"></pubInput>
-        <pubTextarea class='input-item' v-if="item.type == 5 " v-model='item.currentValue' v-bind:data="item"></pubTextarea>
-        <pubTimePicker v-if="item.type == 6" v-model='item.currentValue' v-bind:data="item"></pubTimePicker>
-        <pubTimeArea v-if="item.type == 7" v-model='item.currentValue' v-bind:data="item"></pubTimeArea>
+        <pub-radio v-if="item.type == 2 || item.type==1" v-bind:label="item.label" v-bind:data='selectData(item.view.data)' v-model="item.currentValue"></pub-radio>
+        <pub-check-box v-if="item.type == 3 " v-bind:data='item' v-model="item.currentValue"></pub-check-box>
+        <pub-input class='input-item' v-if="item.type == 4 " v-model='item.currentValue' v-bind:placeholder="item.view.placeholder" v-bind:label="item.label" v-bind:type="item.view.type"></pub-input>
+        <pub-textarea class='input-item' v-if="item.type == 5 " v-model='item.currentValue' v-bind:placeholder="item.view.placeholder" v-bind:label="item.label"></pub-textarea>
+        <pub-time-picker v-if="item.type == 6" v-model='item.currentValue' v-bind:label="item.label"></pub-time-picker>
+        <pub-time-area v-if="item.type == 7" v-model='item.currentValue' v-bind:data="item"></pub-time-area>
       </div>
       <div class='content-item' v-for="(item,index) in renderData.file" :key='index'>
-        <pubFile v-model='item.currentValue' v-bind:data="item" v-if="item.type == 10"></pubFile>
+        <pub-file v-model='item.currentValue' v-bind:label="item.label" v-if="item.type == 10"></pub-file>
       </div>
-      <pubSelect label="抄送人" class='content-item' v-model='formData.copier' v-bind:data="formData.copier"></pubSelect>
+      <pub-select label="抄送人" class='content-item' v-model='formData.copier' v-bind:data="formData.copier"></pub-select>
     </div>
   </div>
 </template>
@@ -51,6 +51,12 @@ export default {
       }
     };
   },
+  beforeRouteEnter: (to, from, next) => {
+    next(vm=>{
+      vm.formData = null;
+      vm.getData();
+    })
+  },
   computed: {
     headerData() {
       let data = {
@@ -87,13 +93,6 @@ export default {
       }
       return data;
     }
-  },
-  beforeRouteEnter: (to, from, next) => {
-    next(vm => {
-      //先清除数据
-      vm.formData = null;
-      vm.getData();
-    });
   },
   methods: {
     getData() {
@@ -259,6 +258,13 @@ export default {
           break;
       }
       return status;
+    },
+    selectData(data) {
+      let arr = [{ label: "请选择", value: "", isSelect: true }];
+      data.forEach(item => {
+        arr.push({ label: item.value, value: item.value, isSelect: false });
+      });
+      return arr;
     }
   }
 };
@@ -276,27 +282,6 @@ export default {
     .content-item {
       > div {
         border-bottom: 1px solid $border-ec;
-      }
-    }
-    .mint-cell {
-      height: 100%;
-      background-image: none;
-      .mint-cell-value {
-        margin-right: 1.7rem;
-      }
-      .mint-cell-wrapper {
-        padding: 0 1.2rem;
-        background-image: none;
-        .mint-cell-allow-right {
-          &:after {
-            border: solid 2px $border-99;
-            border-bottom-width: 0;
-            border-left-width: 0;
-            right: 1rem;
-            height: 0.9rem;
-            width: 0.9rem;
-          }
-        }
       }
     }
   }
