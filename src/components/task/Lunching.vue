@@ -44,7 +44,10 @@ export default {
         },
         operator: [],
         principal: [],
-        deadline: ""
+        deadline: "",
+        remind: "",
+        reday: "0",
+        isRemind: 0
       },
       deadlineData: [
         {
@@ -84,6 +87,7 @@ export default {
     toSetRemind() {
       this.$router.push({ name: "taskRemindTime" });
     },
+    //发起任务
     postData() {
       if (this.saveData.name == "") {
         this.$toast("请输入任务名称");
@@ -105,7 +109,10 @@ export default {
         initiatorName: this.$store.state.userInfo.realname,
         deadline: this.saveData.deadline,
         level: this.saveData.level,
-        companyId: this.$store.state.userInfo.company_id
+        companyId: this.$store.state.userInfo.company_id,
+        reday: this.saveData.reday,
+        remind: this.saveData.remind,
+        isRemind: this.saveData.isRemind
       };
       if (this.saveData.principal != null) {
         let ids = [];
@@ -142,34 +149,30 @@ export default {
         params.operatorId = ids.join(",");
         params.operatorName = names.join(",");
       }
-      let remindData = this.$store.state.task.remindTime;
-      if (remindData.remind != "") {
-        params.remind = remindData.remind;
-      }
-      if (remindData.reday != "") {
-        params.reday = remindData.reday;
-      }
       console.log("请求数据", params);
-      // this.$post({ url: "/oa-work/task/addTask", postData: params })
-      //   .then(data => {
-      //     console.log("创建任务返回", data);
-      //     this.$toast("创建任务成功");
-      //   })
-      //   .catch(e => {
-      //     console.log("err", e);
-      //     this.$toast("创建任务失败,请重试");
-      //   });
+      this.$post({ url: "/oa-work/task/addTask", postData: params })
+        .then(data => {
+          console.log("创建任务返回", data);
+          let detailsParam = {
+            taskId: data.taskId,
+            taskType: 1,
+            status: 0
+          };
+          this.$store.commit("SAVEDETAILSPARAMS", detailsParam);
+          this.$store.commit("LISTSHOULDREFRESH", true);
+          this.$router.replace({ name: "taskDetails" });
+          this.$toast("创建任务成功");
+        })
+        .catch(e => {
+          console.log("err", e);
+          this.$toast("创建任务失败,请重试");
+        });
     }
   },
   watch: {
     $route(to, from) {
       //发起页到列表页
       if (from.name == "taskLunching" && to.name == "task") {
-        let data = {
-          remind: "",
-          reday: ""
-        };
-        this.$store.commit("SAVEREMINDTIME", data);
         this.$store.commit("SAVELUNCHINGFORMDATA", null);
         console.log("发起页到列表页");
       }
@@ -185,7 +188,10 @@ export default {
           },
           operator: [],
           principal: [],
-          deadline: ""
+          deadline: "",
+          remind: "",
+          reday: "0",
+          isRemind: 0
         };
         console.log("列表页到发起页");
       }
@@ -197,7 +203,7 @@ export default {
       //设置提醒页到发起页
       if (from.name == "taskRemindTime" && to.name == "taskLunching") {
         this.saveData = this.$store.state.task.lunchingFormData;
-        console.log("设置提醒页到发起页");
+        console.log(this.$store.state.task.lunchingFormData);
       }
     }
   }

@@ -7,24 +7,29 @@
       </div>
       <mt-loadmore :top-method="loadTop" ref="loadmore" @top-status-change='loadTopStauts'>
         <div class='list-wrap' v-infinite-scroll="loadMore" infinite-scroll-immediate-check="false" infinite-scroll-disabled="loading" infinite-scroll-distance="10">
-          <mt-button v-for="(item,index) in listData" :key='item.id' class='task-item' @click='toDetails(item)'>
+          <mt-button v-for="item in listData" :key='item.id' class='task-item' @click='toDetails(item)'>
             <span class="isRevoke" v-if="item.status == 4">
               <i class='oa-icon check-revoke'></i>
             </span>
-            <span class='isOverdue' v-if="item.taskTime.isOverdue">逾期</span>
+            <span class='isOverdue' v-if="item.taskTime">逾期</span>
             <div class='avatar'>
               <img v-if="item.initiatorUserInfo" :src="item.initiatorUserInfo.imgsrc">
             </div>
             <div class='content-wrap'>
               <p class='title'>{{item.name}}</p>
               <p class='principalName'>负责人:{{item.principal_name}}</p>
-              <p class='endTime'>距离截止时间还有：
-                <span :class="[item.taskTime.class,'task-time']">{{item.taskTime.time}}
+              <p class='endTime' v-if="slideIndex == 1">距离截止时间还有：
+                <span v-if="item.taskTime" :class="[item.taskTime.class,'task-time']">{{item.taskTime.time}}
                   <i class='oa-icon Tenure'></i>
                 </span>
               </p>
+              <p class="endTime" v-if="slideIndex == 3">
+                <span v-if="item.status == 3">完成时间: </span>
+                <span v-if="item.status == 4">撤销时间: </span>
+                {{item.complete |timeFilter("YYYY.MM.DD HH:ss")}}
+              </p>
             </div>
-            <p :class="[item.taskLevel.class,'level']">
+            <p v-if="item.taskLevel" :class="[item.taskLevel.class,'level']">
               <span>{{item.taskLevel.str}}</span>
             </p>
             <div class='task-item-bg'></div>
@@ -38,6 +43,8 @@
         </div>
       </mt-loadmore>
     </div>
+    <p v-show="false">{{listIndex}}</p>
+    <p v-show="false">{{listRefresh}}</p>
   </div>
 </template>
 
@@ -63,22 +70,24 @@ export default {
         startNum: 0,
         status: 1
       },
+      isInit: true,
       loading: false,
-      topStatus: null
+      topStatus: null,
+      listData: null
     };
   },
   computed: {
-    listData() {
-      let data = this.showData.list;
-      data.forEach((item, index) => {
-        //获取发起人资料
-        this.$getMan(item.initiator_id).then(data => {
-          this.$set(this.listData[index], "initiatorUserInfo", data);
-        });
-        item.taskTime = this.calTime(item.deadline);
-        item.taskLevel = this.returnTaskLevel(item.level);
-      });
-      return data;
+    listIndex() {
+      return this.$store.state.task.listIndex;
+    },
+    listRefresh() {
+      if (this.$store.state.task.listRefresh == true) {
+        this.$store.commit("LISTSHOULDREFRESH", false);
+        this.showData.list = [];
+        this.showData.startNum = 0;
+        this.getList();
+      }
+      return "";
     }
   },
   mounted() {
@@ -95,6 +104,14 @@ export default {
       this.showData.startNum = 0;
       this.showData.status = this.slideIndex;
       this.getList();
+    },
+    listIndex() {
+      if (this.id == this.$store.state.task.listIndex) {
+        this.showData.list = [];
+        this.listData = [];
+        this.showData.startNum = 0;
+        this.getList();
+      }
     }
   },
   methods: {
@@ -128,9 +145,41 @@ export default {
           data.result.forEach(item => {
             list.push(item);
           });
+          this.showData.startNum += this.listPage;
+          if (obj) {
+            if (obj.isLoadTop) {
+              this.$refs.loadmore.onTopLoaded();
+            } else if (obj.isLoadBottom) {
+              if (data.result.length < this.listPage) {
+                this.loading = true;
+              } else {
+                this.loading = false;
+              }
+            }
+          }
+        })
+        .then(() => {
+          let data = this.showData.list;
+          data.forEach((item, index) => {
+            //获取发起人资料
+            this.$getMan(item.initiator_id).then(data => {
+              this.$set(this.listData[index], "initiatorUserInfo", data);
+            });
+            item.taskTime = this.calTime(item.deadline);
+            item.taskLevel = this.returnTaskLevel(item.level);
+          });
+          this.listData = data;
+          console.log(this.listData);
         })
         .catch(e => {
           console.log("err", e);
+          if (obj) {
+            if (obj.isLoadTop) {
+              this.$refs.loadmore.onTopLoaded();
+            } else if (obj.isLoadBottom) {
+              this.loading = false;
+            }
+          }
           this.$toast("获取任务列表失败");
         });
     },
@@ -139,16 +188,26 @@ export default {
       let detailsParam = {
         taskId: item.id,
         taskType: parseInt(this.id + 1),
-        status: this.slideIndex
+        status: item.status
       };
       this.$store.commit("SAVEDETAILSPARAMS", detailsParam);
       this.$router.push({ name: "taskDetails" });
     },
-    loadTop() {},
+    loadTop() {
+      this.showData.list = [];
+      this.showData.startNum = 0;
+      this.getList({ isLoadTop: true });
+    },
     loadTopStauts(status) {
       this.topStatus = status;
     },
-    loadMore() {},
+    loadMore() {
+      if (this.loading == false) {
+        this.loading = true;
+        this.getList({ isLoadBottom: true });
+      }
+    },
+    // 计算截止时间
     calTime(time) {
       let nowTime = moment().valueOf();
       let returnData = {
@@ -164,8 +223,14 @@ export default {
         let daysTime = Math.floor(pareTime / (24 * 3600 * 1000));
         let hoursTempTime = pareTime % (24 * 3600 * 1000);
         let hoursTime = Math.floor(hoursTempTime / (3600 * 1000));
+        if (hoursTime < 10) {
+          hoursTime = "0" + hoursTime;
+        }
         let minutesTempTime = hoursTempTime % (3600 * 1000);
         let minutesTime = Math.floor(minutesTempTime / (60 * 1000));
+        if (minutesTime < 10) {
+          minutesTime = "0" + minutesTime;
+        }
         if (daysTime == 0) {
           returnData.time = hoursTime + ":" + minutesTime;
           returnData.class = "danger";
@@ -177,6 +242,7 @@ export default {
       }
       return returnData;
     },
+    /** 返回任务紧急程度*/
     returnTaskLevel(level) {
       let returnObj = {
         class: "",

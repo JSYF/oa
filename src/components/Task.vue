@@ -34,6 +34,24 @@ export default {
         backUrl: "/"
       }
     };
+  },
+  beforeRouteLeave(to, from, next) {
+    let arr = document.querySelectorAll(".taskList .task-content");
+    let topArr = [];
+    arr.forEach(item => {
+      topArr.push(item.scrollTop);
+    });
+    this.$store.commit("SAVETASKLISTHEIGHT", topArr);
+    next();
+  },
+  beforeRouteEnter: (to, from, next) => {
+    next(vm => {
+      let arr = document.querySelectorAll(".taskList .task-content");
+      let topArr = vm.$store.state.task.listScrollTop;
+      for (let i = 0; i < arr.length; i++) {
+        arr[i].scrollTop = topArr[i];
+      }
+    });
   }
 };
 </script>

@@ -48,9 +48,6 @@ export default {
       type: this.$store.state.task.detailsParams.taskType
     };
   },
-  created() {
-    console.log(this.nodeData);
-  },
   computed: {
     fileData() {
       let obj = {
@@ -97,6 +94,7 @@ export default {
           }
         ]
       };
+      console.log(this.nodeData, this.nodeData.principal_file != "[]");
       // if (this.nodeData.principal_file != "[]") {
       //   let temp = JSON.parse(this.nodeData.principal_file);
       //   if (temp.length == 0) {
@@ -137,6 +135,7 @@ export default {
 
 <style lang="scss">
 .task-node {
+  overflow: hidden;
   padding: 0 1.2rem;
   background: $bg-white;
   .node-item {
@@ -165,6 +164,9 @@ export default {
       }
       &.error {
         background: $danger;
+        &::before {
+          content: "\e66b";
+        }
       }
     }
     .name {
@@ -200,7 +202,6 @@ export default {
         font-size: 1.2rem;
         color: $font-99;
       }
-
       &::after {
         content: "";
         display: block;
@@ -211,10 +212,21 @@ export default {
         left: 20%;
         position: absolute;
       }
+      &::before {
+        content: "";
+        width: 1px;
+        left: 0.9rem;
+        top: 0;
+        position: absolute;
+        display: block;
+        background: $border-99;
+        height: 100%;
+      }
     }
     .node-bottom-box {
       min-height: 4rem;
       padding: 1.5rem 0;
+      position: relative;
       .node-bottom-bar {
         margin-bottom: 1rem;
         height: 1.8rem;
@@ -236,6 +248,52 @@ export default {
             height: 4.2rem;
             width: 4.2rem;
           }
+        }
+      }
+      &::after {
+        content: "";
+        display: block;
+        bottom: 0;
+        height: 1px;
+        width: 100%;
+        background: $bg-ec;
+        left: 20%;
+        position: absolute;
+      }
+      &::before {
+        content: "";
+        width: 1px;
+        left: 0.9rem;
+        top: 0;
+        position: absolute;
+        display: block;
+        background: $border-99;
+        height: 100%;
+      }
+    }
+    &:first-child {
+      .node-top-box {
+        // background: red;
+        &::before {
+          margin-top: 1.5rem;
+        }
+      }
+      .node-bottom-box {
+        &::before {
+          margin-top: 1.5rem;
+        }
+      }
+      .node-top-box + .node-botton-box {
+        &::before {
+          margin-top: 0;
+        }
+      }
+    }
+    &:last-child {
+      .node-bottom-box {
+        // background: red;
+        &::before {
+          height: 1.5rem;
         }
       }
     }

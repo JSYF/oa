@@ -9,6 +9,7 @@ import ApproveDetails from "@/components/approve/Details";
 import TaskLunching from "@/components/task/Lunching";
 import TaskRemindTime from "@/components/task/RemindTime";
 import TaskDetails from "@/components/task/Details";
+import TaskCheck from "@/components/task/TaskCheck";
 Vue.use(Router)
 import store from "../store";
 const router = new Router({
@@ -57,6 +58,11 @@ const router = new Router({
       name: "taskRemindTime",
       path: "/task/lunching/remindTime",
       component: TaskRemindTime
+    },
+    {
+      name: "taskCheck",
+      path: "/task/details/check",
+      component: TaskCheck
     }
   ]
 })

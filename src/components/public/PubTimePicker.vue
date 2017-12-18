@@ -12,7 +12,7 @@
         <p class='time-text'>{{item.timeText}}</p>
       </mt-button>
     </div>
-    <mt-datetime-picker :endDate='endTime' ref="picker" type="datetime" v-model="timePickValue" @confirm="handleConfirm">
+    <mt-datetime-picker :endDate='endTime' ref="picker" :type="pickerType" v-model="timePickValue" @confirm="handleConfirm">
     </mt-datetime-picker>
 
   </div>
@@ -24,7 +24,7 @@ import moment from "moment";
 import bgWrap from "./BgWrap";
 export default {
   name: "pubTimePicker",
-  props: ["label", "isTask", "value"],
+  props: ["label", "isTask", "value", "formate", "timePickType"],
   components: { bgWrap },
   data() {
     return {
@@ -48,15 +48,38 @@ export default {
     props: "returnValue",
     event: "returnDataFunc"
   },
+  computed: {
+    pickerType() {
+      if (this.timePickType == "date") {
+        return "date";
+      } else if (this.timePickType == "time") {
+        this.timePickValue = moment().format("HH:mm");
+        return "time";
+      } else {
+        return "datetime";
+      }
+    }
+  },
   watch: {
     value() {
-      console.log("value", this.value);
       if (this.value) {
-        this.timePickValue = new Date(this.value);
-        this.showValue = moment(this.value).format("YYYY.MM.DD HH:mm");
+        if (this.timePickType == "time") {
+          this.timePickValue = moment(this.value).format("HH:mm");
+        } else {
+          this.timePickValue = new Date(this.value);
+        }
+        if (this.formate) {
+          this.showValue = moment(this.value).format(this.formate);
+        } else {
+          this.showValue = moment(this.value).format("YYYY.MM.DD HH:mm");
+        }
       } else {
         this.showValue = "请选择";
-        this.timePickValue = new Date();
+        if (this.timePickType == "time") {
+          this.timePickValue = moment().format("HH:mm");
+        } else {
+          this.timePickValue = new Date();
+        }
       }
     }
   },
@@ -74,11 +97,29 @@ export default {
         if (moment(this.timePickValue).isBefore(new Date())) {
           this.$toast("已晚于当前时间，请重新选择");
         } else {
-          this.$emit("returnDataFunc", moment(this.timePickValue).valueOf());
+          let time = this.timeTypeFormat();
+          this.$emit("returnDataFunc", time);
           this.boxStatus = false;
         }
       } else {
-        this.$emit("returnDataFunc", moment(this.timePickValue).valueOf());
+        // console.log(moment(this.timePickValue));
+        this.timeTypeFormat();
+        let time = this.timeTypeFormat();
+        this.$emit("returnDataFunc", time);
+      }
+    },
+    //处理只有time类型的数据
+    timeTypeFormat() {
+      if (this.timePickType == "time") {
+        let arr = this.timePickValue.split(":");
+        let time = moment()
+          .hours(arr[0])
+          .minutes(arr[1])
+          .seconds(0)
+          .milliseconds(0);
+        return time.valueOf();
+      } else {
+        return moment(this.timePickValue).valueOf();
       }
     },
     selectTime(index) {
@@ -118,7 +159,11 @@ export default {
         this.$emit("returnDataFunc", moment(returnTime).valueOf());
         this.boxStatus = false;
       } else {
-        this.timePickValue = new Date();
+        if (this.timePickType == "time") {
+          this.timePickValue = moment().format("HH:mm");
+        } else {
+          this.timePickValue = new Date();
+        }
         this.$refs.picker.open();
       }
     },

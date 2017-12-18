@@ -15,7 +15,7 @@ export default {
   props: ["name", "size"],
   methods: {
     openFile() {
-      cnsole.log("打开文件");
+      console.log("打开文件");
     },
     fileFunc() {
       this.$emit("fileItemFunc");

@@ -5,7 +5,7 @@
         <i class='oa-icon back'></i>
       </mt-button>
     </router-link>
-    <mt-button class='right-btn' slot="right" v-if="headerData.btnText" @click='btnSubmit'>{{headerData.btnText}}</mt-button>
+    <mt-button class='right-btn' slot="right" v-if="rightBtnText" @click='btnSubmit'>{{rightBtnText}}</mt-button>
   </mt-header>
 </template>
 
@@ -13,20 +13,30 @@
 <script>
 export default {
   name: "pubHeader",
-  props: ["headerData"],
+  props: ["headerData", "btnText"],
+  computed: {
+    rightBtnText() {
+      if (this.btnText) {
+        return this.btnText;
+      } else if (this.headerData.btnText) {
+        return this.headerData.btnText;
+      } else {
+        return "";
+      }
+    }
+  },
   methods: {
     btnSubmit() {
       this.$emit("rightBtnMehod");
     },
     back() {
       if (this.headerData.isBack) {
-        console.log("back");
+        // console.log("back");
         this.$router.go(-1);
       } else {
-        console.log("replace");
+        // console.log("replace");
         this.$router.replace(this.headerData.backUrl);
       }
-      // console.log(this.headerData);
     }
   }
 };

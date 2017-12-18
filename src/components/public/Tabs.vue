@@ -25,20 +25,18 @@ export default {
   components: { approveList, taskList },
   data() {
     return {
-      selected: this.$store.state.approve.listIndex
+      selected: 0
     };
   },
   watch: {
     selected: function(index) {
       //设置审批列表位置
-      if (this.tabData.from) {
+      if (this.tabData.from == "approve") {
         this.$store.commit("SETLISTINDEX_APPROVE", index);
       } else {
+        this.$store.commit("SAVELISTINDEX_TASK", index);
       }
     }
-  },
-  methods: {
-    getApproveData: function() {}
   }
 };
 </script>

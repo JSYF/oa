@@ -15,6 +15,7 @@ $danger: #FF5454;
 $warning:#FFBB3A;
 $green:#27dabc;
 $nav-bg:white;
+//头部高度
 $header-height:4.4rem;
 $header-bg:$primary;
 $fot-height:4.9rem;
@@ -23,6 +24,8 @@ $col-agress:$green;
 $col-disagree:$danger;
 //审批尾部高度
 $agreesFooterHeight:5rem;
+//任务尾部高度
+$taskFooterHeight:5rem;
 //滑动条高度
 $slideBarHeight:3.3rem+0.8rem;
 @mixin linear-bg() {

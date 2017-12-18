@@ -1,5 +1,5 @@
 const state = {
-    listPageNum: 5,
+    listPageNum: 10,
     slideData: [
         {
             id: 1,
@@ -11,17 +11,26 @@ const state = {
         }
     ],
     lunchingFormData: null,
-    remindTime: {
-        remind: "",
-        reday: ""
-    },
-    detailsParams: null
+    detailsParams: null,
+    taskCheckData: null,
+    remindToDetails: false,
+    detailsToRemindData: null,
+    listIndex: 0,
+    listRefresh: false,
+    listScrollTop: [0, 0, 0]
 }
 
 const mutations = {
-    //存储提醒时间数据
-    SAVEREMINDTIME(state, params) {
-        state.remindTime = params;
+    //列表index
+    SAVELISTINDEX_TASK(state, params) {
+        state.listIndex = params;
+    },
+    //列表高度
+    SAVETASKLISTHEIGHT(state, params) {
+        state.listScrollTop = params;
+    },
+    LISTSHOULDREFRESH(state, params) {
+        state.listRefresh = params;
     },
     // 存储任务详情参数
     SAVEDETAILSPARAMS(state, params) {
@@ -29,8 +38,19 @@ const mutations = {
     },
     //存储发起任务的表单数据
     SAVELUNCHINGFORMDATA(state, params) {
-        console.log("params", params);
         state.lunchingFormData = params;
+    },
+    //存储验收任务参数
+    SAVETASKCHECKDATA(state, params) {
+        state.taskCheckData = params;
+    },
+    //存储任务详情到设置提醒页面所需参数
+    SAVEDETAILSTOREMINDDATA(state, params) {
+        state.detailsToRemindData = params;
+    },
+    //任务详细页面是否需要刷新
+    SAVEREMINDToDETAILS(state, params) {
+        state.remindToDetails = params;
     }
 }
 

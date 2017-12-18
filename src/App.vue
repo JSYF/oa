@@ -11,12 +11,7 @@ export default {
   name: "app",
   data() {
     return {
-      unKeepLiveComponents: [
-        "approveDetail",
-        "approve-lunching",
-        "taskRemindTime",
-        "taskDetails"
-      ]
+      unKeepLiveComponents: ["approveDetail", "approve-lunching"]
     };
   }
 };

@@ -105,7 +105,6 @@ export default {
       }
     },
     loadMore() {
-      console.log("loadmore");
       if (this.loading == false) {
         this.loading = true;
         this.getList({ isLoadBottom: true });
@@ -192,7 +191,14 @@ export default {
         })
         .catch(e => {
           console.log("err", e);
-          this.$toast("查询审批列表失败");
+          if (obj) {
+            if (obj.isLoadTop) {
+              this.$refs.loadmore.onTopLoaded();
+            } else if (obj.isLoadBottom) {
+              this.loading = false;
+            }
+          }
+          if (obj.isLoadTop) this.$toast("查询审批列表失败");
         });
     },
     /**跳转到详情页 */
